@@ -1,0 +1,142 @@
+# Author: Karsten Koeneke (karsten.koeneke@cernSPAMNOT.ch)
+# RJigsaw root stand-alone makefile
+
+#
+# Include the architecture definitions from the ROOT sources
+#
+#  Makefile.arch can be in two different locations depending on the system
+#  you're compiling on. The Fink installed version of ROOT has this file
+#  in a different location than the "normally installed" ROOT versions...
+#
+ARCH_LOC_1 := $(wildcard $(shell root-config --prefix)/test/Makefile.arch)
+ARCH_LOC_2 := $(wildcard $(shell root-config --prefix)/share/root/test/Makefile.arch)
+ARCH_LOC_3 := $(wildcard $(shell root-config --prefix)/share/doc/root/test/Makefile.arch)
+ARCH_LOC_4 := $(wildcard $(shell root-config --prefix)/etc/Makefile.arch)
+ifneq ($(strip $(ARCH_LOC_1)),)
+  $(info Using $(ARCH_LOC_1))
+  include $(ARCH_LOC_1)
+else
+  ifneq ($(strip $(ARCH_LOC_2)),)
+    $(info Using $(ARCH_LOC_2))
+    include $(ARCH_LOC_2)
+  else
+    ifneq ($(strip $(ARCH_LOC_3)),)
+      $(info Using $(ARCH_LOC_3))
+      include $(ARCH_LOC_3)
+    else
+      ifneq ($(strip $(ARCH_LOC_4)),)
+        $(info Using $(ARCH_LOC_4))
+        include $(ARCH_LOC_4)
+      else
+        $(error Could not find Makefile.arch!)
+      endif
+    endif
+  endif
+endif
+
+# -------------------------------------------------------------
+# General flags
+# -------------------------------------------------------------
+PACKAGE    = RJigsaw
+OUTPUTDIR  = ../StandAlone
+
+# Get these from Makefile.arch above
+#CC         = g++
+#CCFLAGS    = -g -m32 -fPIC -Wall -W -Woverloaded-virtual -Wno-parentheses -Wno-unused-parameter -Wno-unused-variable
+#LDFLAGS    = -g -m32 -fPIC 
+
+MFLAGS     = -MM -Wall -W -Woverloaded-virtual
+INCLUDES   += -I$(shell root-config --incdir) -I.. -I../Root -I../RJigsaw
+
+# Need these to avoid loading dependent libraries when ROOT starts
+#LINKLIBS = -L$(shell root-config --libdir) -lRIO -lTree -lHist -lMatrix
+LINKLIBS = $(shell root-config --libs)
+
+# for cross-compilation. ATLAS env sets CPPEXPFLAGS if it is needed
+# If you want to cross-compile standalone just set CPPEXPFLAGS, for host-slc6&target-slc5 with gcc43 it is -D__USE_XOPEN2K8
+ifneq ($(strip $(CPPEXPFLAGS)),)
+CXXFLAGS += $(CPPEXPFLAGS)
+endif
+
+#rootcint not compatible with c++11 yet, so remove temporary fix thanks to Emil...
+CXXFLAGS_NO_C11 = $(subst -std=c++11,,$(CXXFLAGS))
+
+# -------------------------------------------------------------
+# ROOT Cint
+# -------------------------------------------------------------
+CINT       = RJigsawcint
+LDEFFILE   = ../Root/LinkDef.h
+CINTFILE   = ../Root/TRJigsawCint.cxx
+CINTFILEH  = ../Root/TRJigsaw.h
+CINTOBJ    = ../Root/TRJigsawCint.o
+CCLISTT    = TRJigsaw.cxx
+CCLISTC    = $(addprefix ../Root/,$(CCLISTT)) $(CINTFILE)
+HHLISTT    = TRJigsaw.h
+HHLISTC    = $(addprefix ../RJigsaw/,$(HHLISTT)) 
+OLISTC     = $(patsubst %.cxx,%.o,$(CCLISTC))
+CCLIST     = $(CCLISTC) $(wildcard ../src/*.cxx) $(wildcard ../Modules/*.cxx)
+HLIST      = $(wildcard ../RJigsaw/*.h)
+OLIST      = $(patsubst %.cxx,%.o,$(CCLIST))
+DLIST      = $(patsubst %.h,%.d,$(HLIST))
+
+# -------------------------------------------------------------
+# Libraries
+# -------------------------------------------------------------
+SHLIBFILE  = $(OUTPUTDIR)/lib$(PACKAGE).so
+
+ifeq ($(PLATFORM),macosx)
+###EXTRALDFLAGS = -install_name @rpath/$(SHLIBFILE)
+EXTRALDFLAGS = -install_name $(PACKAGE)/StandAlone/lib$(PACKAGE).so
+endif
+
+# get libraries of ROOT
+define ldlinksuffixROOT
+   $(addsuffix $(LDLINKSUFFIX),$(Lib)) $(shell if [ "$(findstring -Ldlink2,$(OPTIONS))" ]; then echo $(addsuffix _pkgid_$(ROOTVER),$(Lib)); fi)
+endef
+
+# -------------------------------------------------------------
+# Compilation
+# -------------------------------------------------------------
+
+default: shlib
+
+# Implicit rule making all dependency Makefiles included at the end of this makefile
+%.d: %.cxx $(HLIST)
+	@echo "Making $@"
+	@set -e; $(CC) $(MFLAGS) $(CXXFLAGS) $< \
+		| awk '{ sub("^$(notdir $*).o:","$*.o $@:") ; print }' > $@ ;\
+		[ -s $@ ] || rm -f $@
+
+# Implicit rule to compile all classes
+%.o : %.cxx
+	@echo "Compiling $<"
+	@$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $*.o 
+
+# Rule to make ROOTCINT output file
+$(CINTOBJ) : $(HHLISTC) $(LDEFFILE)
+	@echo "Running rootcint"
+	@$(ROOTSYS)/bin/rootcint -f $(CINTFILE) -c -p  $(CXXFLAGS_NO_C11) $(INCLUDES) $(HHLISTC) LinkDef.h
+	@echo "Compiling $(CINTFILE)"
+	@$(CXX) $(CXXFLAGS) $(INCLUDES) -c $(CINTFILE) -o $@
+
+rootcint : $(HHLISTC) $(LDEFFILE)
+	@echo "Running rootcint"
+	$(ROOTSYS)/bin/rootcint -f $(CINTFILE) -c -p  $(CXXFLAGS_NO_C11) $(INCLUDES) $(HHLISTC) LinkDef.h
+
+# Rule to combine objects into a shared library
+$(SHLIBFILE): $(OLISTC)
+	@echo "Linking $(SHLIBFILE)"
+	@mkdir -p $(OUTPUTDIR)
+	@rm -f $(SHLIBFILE)
+	@$(LD) $(CXXFLAGS) $(SOFLAGS) $(LINKLIBS) $(EXTRALDFLAGS) $(OLISTC) -o $(SHLIBFILE) 
+	@rm -f $(OUTPUTDIR)/RJigsawLib.so
+	@ln -s $(SHLIBFILE) $(OUTPUTDIR)/RJigsawLib.so 
+
+-include $(DLIST)
+
+RJigsawcint: $(CINTOBJ)
+shlib: $(SHLIBFILE)
+
+clean:
+	@rm -f ../*/*.o ../*/*.d ../*/*Cint.*
+

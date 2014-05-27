@@ -1,0 +1,54 @@
+package RJigsaw
+
+author Will Buttinger <will@cern.ch>
+
+## For Athena policies: it has to be the first use statement
+use AtlasPolicy                 AtlasPolicy-*
+use AtlasROOT                   AtlasROOT-*             External
+use GaudiInterface              GaudiInterface-*        External
+use AthenaBaseComps             AthenaBaseComps-*       Control
+
+
+private 
+use SGTools                     SGTools-*               Control
+use AthenaKernel                AthenaKernel-*          Control
+use EventInfo                EventInfo-*             Event
+end_private
+
+
+
+
+## macros   
+apply_tag       ROOTBasicLibs
+apply_tag       ROOTMathLibs
+
+
+## declare the directories CMT should know about
+branches python share doc src Root
+
+
+
+apply_pattern have_root_headers     root_headers="TRJigsaw.h ../Root/LinkDef.h"    headers_lib="RJigsawLib"
+apply_pattern dual_use_library files=" *.cxx ../Root/*.cxx"
+
+
+## install our python modules
+apply_pattern declare_python_modules files="*.py"
+
+## install our job options files
+apply_pattern declare_joboptions files="*.py"
+
+## install default config file
+apply_pattern declare_runtime files="*.root"
+
+#Install the tool so that it is ready to be used in Root command line!
+make_fragment rlibmap -header=rlibmap_header
+document rlibmap MyLibMap LIBNAME=RJigsawLib HeaderFolder=RJigsaw
+macro_append MyLibMap_dependencies " RJigsawLib "
+apply_pattern application_path
+macro merge_rootmap_tag "--do-merge" do_merge_rootmap "--do-merge" no_merge_rootmap "--un-merge"
+document merge_rootmap MyLibMergeMap library=RJigsawLib merge_rootmap_switch=$(merge_rootmap_tag) $(bin)libRJigsawLib.so
+macro_append MyLibMergeMap_dependencies " MyLibMap "
+
+
+

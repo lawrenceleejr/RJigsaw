@@ -1,0 +1,6 @@
+PACKAGE          = RJigsaw
+PACKAGE_CXXFLAGS = 
+PACKAGE_LDFLAGS  = 
+PACKAGE_PRELOAD  = Hist
+
+include $(ROOTCOREDIR)/Makefile-common
