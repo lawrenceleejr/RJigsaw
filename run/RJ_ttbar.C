@@ -12,7 +12,7 @@
 #include <vector>
 #include <TLegend.h>
 
-#include "RJigsawTool.h"
+#include "../RJigsaw/TRJigsaw.h"
 
 using namespace std; 
 
@@ -87,25 +87,25 @@ void RJ_ttbar(){
   //Number of toy events to throw
   int N = 100;
 
-  RJigsawTool* RJTool = new RJigsawTool();
+  Root::TRJigsaw* RJTool = new Root::TRJigsaw();
 	
   //setup histograms
   RJTool->resetHists();
 
-  RJTool->bookHist("dphiTT_-1_vs_dphiTT_0",50, 0.0, TMath::Pi(), 50, 0.0,TMath::Pi());
-  RJTool->bookHist("dphiTT_-1_vs_dphiTT_1",50, 0.0, TMath::Pi(), 50, 0.0,TMath::Pi());
-  RJTool->bookHist("dphiM_-1_vs_dphiM_0",50, 0.0, TMath::Pi(), 50, 0.0,TMath::Pi());
-  RJTool->bookHist("dphiM_-1_vs_dphiM_1",50, 0.0, TMath::Pi(), 50, 0.0,TMath::Pi());
-  RJTool->bookHist("dphiTT_-1_vs_dphiM_-1",50, 0.0, TMath::Pi(), 50, 0.0,TMath::Pi());
-  RJTool->bookHist("dphiTT_0_vs_dphiM_0",50, 0.0, TMath::Pi(), 50, 0.0,TMath::Pi());
-  RJTool->bookHist("dphiTT_1_vs_dphiM_1",50, 0.0, TMath::Pi(), 50, 0.0,TMath::Pi());
+  RJTool->bookHist(1,"dphiTT_-1_vs_dphiTT_0",50, 0.0, TMath::Pi(), 50, 0.0,TMath::Pi());
+  RJTool->bookHist(1,"dphiTT_-1_vs_dphiTT_1",50, 0.0, TMath::Pi(), 50, 0.0,TMath::Pi());
+  RJTool->bookHist(1,"dphiM_-1_vs_dphiM_0",50, 0.0, TMath::Pi(), 50, 0.0,TMath::Pi());
+  RJTool->bookHist(1,"dphiM_-1_vs_dphiM_1",50, 0.0, TMath::Pi(), 50, 0.0,TMath::Pi());
+  RJTool->bookHist(1,"dphiTT_-1_vs_dphiM_-1",50, 0.0, TMath::Pi(), 50, 0.0,TMath::Pi());
+  RJTool->bookHist(1,"dphiTT_0_vs_dphiM_0",50, 0.0, TMath::Pi(), 50, 0.0,TMath::Pi());
+  RJTool->bookHist(1,"dphiTT_1_vs_dphiM_1",50, 0.0, TMath::Pi(), 50, 0.0,TMath::Pi());
 
-  RJTool->bookHists("MTT_0_vs_dphiM_0",50, 0.0, TMath::Pi(), 50, 0.0,TMath::Pi());
-  RJTool->bookHists("MTT_1_vs_dphiM_1",50, 0.0, TMath::Pi(), 50, 0.0,TMath::Pi());
+  RJTool->bookHist(1,"MTT_0_vs_dphiM_0",50, 0.0, TMath::Pi(), 50, 0.0,TMath::Pi());
+  RJTool->bookHist(1,"MTT_1_vs_dphiM_1",50, 0.0, TMath::Pi(), 50, 0.0,TMath::Pi());
 
-  RJTool->bookHists("costhetaT1_-1_vs_costhetaT2_-1",50, -1., 1., 50, -1.,1.);
-  RJTool->bookHists("costhetaT1_0_vs_costhetaT2_0",50, -1., 1., 50, -1.,1.);
-  RJTool->bookHists("costhetaT1_1_vs_costhetaT2_1",50, -1., 1., 50, -1.,1.);
+  RJTool->bookHist(1,"costhetaT1_-1_vs_costhetaT2_-1",50, -1., 1., 50, -1.,1.);
+  RJTool->bookHist(1,"costhetaT1_0_vs_costhetaT2_0",50, -1., 1., 50, -1.,1.);
+  RJTool->bookHist(1,"costhetaT1_1_vs_costhetaT2_1",50, -1., 1., 50, -1.,1.);
 
 
   TH2D *hist_dcosthetaT1_costhetaT1_top = new TH2D("hist_dcosthetaT1_costhetaT1_top","hist_dcosthetaT1_costhetaT1_top",50, -1., 1., 50, -1.0,1.);
@@ -322,7 +322,7 @@ void RJ_ttbar(){
     
     RJTool->newEvent();
 
-    RJTool->addTruParticle();
+    //RJTool->addTruParticle();
 
     // give b's to the tool
     RJTool->addVisParticle("b",C_2[0]);
@@ -939,18 +939,18 @@ void RJ_ttbar(){
     // hist_dphi_T1_W1_costhetaT2->Fill(dphi_W_T1,costhetaT2);
   }
 	
-  TCanvas *c1 = Plot_Me_2D("c1", hist_dphiTT_true_v_top, "| #Delta #phi_{TT}^{true} |", "| #Delta #phi_{TT}^{top} |");
-  TCanvas *c2 = Plot_Me_2D("c2", hist_dphiTT_true_v_W, "| #Delta #phi_{TT}^{true} |", "| #Delta #phi_{TT}^{W} |");
-  TCanvas *c3 = Plot_Me_2D("c3", hist_dphiM_true_v_top, "| #Delta #phi_{M}^{true} |", "| #Delta #phi_{M}^{top} |");
-  TCanvas *c4 = Plot_Me_2D("c4", hist_dphiM_true_v_W, "| #Delta #phi_{M}^{true} |", "| #Delta #phi_{M}^{W} |");
-  TCanvas *c5 = Plot_Me_2D("c5", hist_dphiTT_dphiM_true, "| #Delta #phi_{TT}^{true} |", "| #Delta #phi_{M}^{true} |");
-  TCanvas *c6 = Plot_Me_2D("c6", hist_dphiTT_dphiM_top, "| #Delta #phi_{TT}^{top} |", "| #Delta #phi_{M}^{top} |");
-  TCanvas *c7 = Plot_Me_2D("c7", hist_dphiTT_dphiM_W, "| #Delta #phi_{TT}^{W} |", "| #Delta #phi_{M}^{W} |");
-  TCanvas *c8 = Plot_Me_2D("c8", hist_MTT_dphiM_top, "M_{tt}^{top} / M_{tt}^{true}", "| #Delta #phi_{M}^{top} |");
-  TCanvas *c9 = Plot_Me_2D("c9", hist_MTT_dphiM_W, "M_{tt}^{W} / M_{tt}^{true}", "| #Delta #phi_{M}^{W} |");
-  TCanvas *c10 = Plot_Me_2D("c10", hist_costhetaT1_costhetaT2, "cos #theta_{T1}^{true}", "cos #theta_{T2}^{true}");
-  TCanvas *c11 = Plot_Me_2D("c11", hist_costhetaT1_costhetaT2_top, "cos #theta_{T1}^{top}", "cos #theta_{T2}^{top}");
-  TCanvas *c12 = Plot_Me_2D("c12", hist_costhetaT1_costhetaT2_W, "cos #theta_{T1}^{W}", "cos #theta_{T2}^{W}");
+  // TCanvas *c1 = Plot_Me_2D("c1", hist_dphiTT_true_v_top, "| #Delta #phi_{TT}^{true} |", "| #Delta #phi_{TT}^{top} |");
+  // TCanvas *c2 = Plot_Me_2D("c2", hist_dphiTT_true_v_W, "| #Delta #phi_{TT}^{true} |", "| #Delta #phi_{TT}^{W} |");
+  // TCanvas *c3 = Plot_Me_2D("c3", hist_dphiM_true_v_top, "| #Delta #phi_{M}^{true} |", "| #Delta #phi_{M}^{top} |");
+  // TCanvas *c4 = Plot_Me_2D("c4", hist_dphiM_true_v_W, "| #Delta #phi_{M}^{true} |", "| #Delta #phi_{M}^{W} |");
+  // TCanvas *c5 = Plot_Me_2D("c5", hist_dphiTT_dphiM_true, "| #Delta #phi_{TT}^{true} |", "| #Delta #phi_{M}^{true} |");
+  // TCanvas *c6 = Plot_Me_2D("c6", hist_dphiTT_dphiM_top, "| #Delta #phi_{TT}^{top} |", "| #Delta #phi_{M}^{top} |");
+  // TCanvas *c7 = Plot_Me_2D("c7", hist_dphiTT_dphiM_W, "| #Delta #phi_{TT}^{W} |", "| #Delta #phi_{M}^{W} |");
+  // TCanvas *c8 = Plot_Me_2D("c8", hist_MTT_dphiM_top, "M_{tt}^{top} / M_{tt}^{true}", "| #Delta #phi_{M}^{top} |");
+  // TCanvas *c9 = Plot_Me_2D("c9", hist_MTT_dphiM_W, "M_{tt}^{W} / M_{tt}^{true}", "| #Delta #phi_{M}^{W} |");
+  // TCanvas *c10 = Plot_Me_2D("c10", hist_costhetaT1_costhetaT2, "cos #theta_{T1}^{true}", "cos #theta_{T2}^{true}");
+  // TCanvas *c11 = Plot_Me_2D("c11", hist_costhetaT1_costhetaT2_top, "cos #theta_{T1}^{top}", "cos #theta_{T2}^{top}");
+  // TCanvas *c12 = Plot_Me_2D("c12", hist_costhetaT1_costhetaT2_W, "cos #theta_{T1}^{W}", "cos #theta_{T2}^{W}");
   //TCanvas *c13 = Plot_Me_2D("c13", hist_dcosthetaT1_costhetaT1_top, "sin (#theta_{T1}^{top}-#theta_{T1}^{true})", "cos #theta_{T1}^{top}");
   //TCanvas *c14 = Plot_Me_2D("c14", hist_dcosthetaT1_costhetaT1_W, "sin (#theta_{T1}^{W}-#theta_{T1}^{true})", "cos #theta_{T1}^{W}");
   //TCanvas *c15 = Plot_Me_2D("c15", hist_dcosthetaT1_dcosthetaT2_top, "sin (#theta_{T1}^{top}-#theta_{T1}^{true})", "sin (#theta_{T2}^{top}-#theta_{T2}^{true})");

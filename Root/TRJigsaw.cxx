@@ -28,6 +28,7 @@ Description:
 #include <TAxis.h>
 #include <TString.h>
 #include <TRandom3.h>
+#include <assert.h>
 
 
 ClassImp(Root::TRJigsaw)
@@ -114,7 +115,7 @@ void Root::TRJigsaw::guessInvParticles(){
          
          if(Inv1Empty){Inv1 = truParticles.at(iparticle).particleMomentum; Inv1Empty=0;}
          else if(Inv2Empty) {Inv2 = truParticles.at(iparticle).particleMomentum; Inv2Empty=0;}
-         //else {assert(0); }
+         else {assert(0); }
       }
 
       particleClass invParticle1;
@@ -289,7 +290,7 @@ void Root::TRJigsaw::getObservables(){
       
       if(B1Empty){B1 = visParticles.at(iparticle).particleMomentum; B1Empty=1;}
       else if(B2Empty) {B2 = visParticles.at(iparticle).particleMomentum; B2Empty=1;}
-      //else {assert(0); }
+      else {assert(0); }
    }
 
    //get leptons in lab frame
@@ -302,10 +303,10 @@ void Root::TRJigsaw::getObservables(){
       
       if(L1Empty){L1 = visParticles.at(iparticle).particleMomentum; L1Empty=1;}
       else if(L2Empty) {L2 = visParticles.at(iparticle).particleMomentum;L2Empty=1; }
-      // else {assert(0); }
+      else {assert(0); }
    }
 
-   // assert(invParticles.size()==2);
+   assert(invParticles.size()==2);
    TLorentzVector NU1 = invParticles[0].particleMomentum;
    TLorentzVector NU2 = invParticles[1].particleMomentum;
 
@@ -328,8 +329,8 @@ void Root::TRJigsaw::getObservables(){
 
     //angles
     observables[ "costhetaTT_"+TString(hemiBalanceMode) ]     = fabs( H1.Vect().Unit().Dot( BltoCM.Unit() ));
-    observables[ "dphiTT_"+TString(hemiBalanceMode) ]          = fabs(H1.Vect().DeltaPhi( BltoCM ));
-    observables[ "dphiM_"+TString(hemiBalanceMode) ]           = fabs( (B1+B2+L1+L2).Vect().DeltaPhi( BltoCM ));
+    observables[ "dphiTT_"+TString(hemiBalanceMode) ]        = fabs(H1.Vect().DeltaPhi( BltoCM ));
+    observables[ "dphiM_"+TString(hemiBalanceMode) ]        = fabs( (B1+B2+L1+L2).Vect().DeltaPhi( BltoCM ));
     //scale
     observables[ "MTT_"+TString(hemiBalanceMode) ]  = (H1+H2).M();
 

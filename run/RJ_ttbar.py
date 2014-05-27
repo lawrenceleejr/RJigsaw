@@ -2,7 +2,7 @@
 
 # from ROOT import *
 
-from rootpy import *
+#from rootpy import *
 from ROOT import *
 
 gSystem.Load("../StandAlone/libRJigsaw");
@@ -51,38 +51,59 @@ M = 175./1000.; #TeV units
 #Number of toy events to throw
 N = 100;
 
-RJTool = ROOT.TRJigsaw()
+RJTool = Root.TRJigsaw()
 
-RJTool.initialize()
+# RJTool.initialize("")
 RJTool.setHemisphereMode(1)
-RJTool.getHemisphereMode()
+print RJTool.getHemisphereMode()
 
 
-# #here, we set up the stuff for dynamic gamma
-# h_gamma = TH1D("newgamma","newgamma",500,1.0,6.0);
-# if b_gamma:
-# 	print "generating gamma distribution"
-# 	for ibin in xrange(500):
-# 		g = h_gamma->GetBinCenter(ibin);
-# 		entry = Calc_dsigma_dgamma(g);
-
-# 		if entry > 0.:
-# 			h_gamma->SetBinContent(ibin, entry);
+RJTool.resetHists()
 
 
-# for i in xrange(N): // event generation loop
-# 	if b_gamma:
-#       gamma = h_gamma->GetRandom();
 
 
-#     # Event generation
+RJTool.bookHist(1,"dphiTT_-1_vs_dphiTT_0",50, 0.0, TMath.Pi(), 50, 0.0,TMath.Pi());
+RJTool.bookHist(1,"dphiTT_-1_vs_dphiTT_1",50, 0.0, TMath.Pi(), 50, 0.0,TMath.Pi());
+RJTool.bookHist(1,"dphiM_-1_vs_dphiM_0",50, 0.0, TMath.Pi(), 50, 0.0,TMath.Pi());
+RJTool.bookHist(1,"dphiM_-1_vs_dphiM_1",50, 0.0, TMath.Pi(), 50, 0.0,TMath.Pi());
+RJTool.bookHist(1,"dphiTT_-1_vs_dphiM_-1",50, 0.0, TMath.Pi(), 50, 0.0,TMath.Pi());
+RJTool.bookHist(1,"dphiTT_0_vs_dphiM_0",50, 0.0, TMath.Pi(), 50, 0.0,TMath.Pi());
+RJTool.bookHist(1,"dphiTT_1_vs_dphiM_1",50, 0.0, TMath.Pi(), 50, 0.0,TMath.Pi());
+RJTool.bookHist(1,"MTT_0_vs_dphiM_0",50, 0.0, TMath.Pi(), 50, 0.0,TMath.Pi());
+RJTool.bookHist(1,"MTT_1_vs_dphiM_1",50, 0.0, TMath.Pi(), 50, 0.0,TMath.Pi());
+RJTool.bookHist(1,"costhetaT1_-1_vs_costhetaT2_-1",50, -1., 1., 50, -1.,1.);
+RJTool.bookHist(1,"costhetaT1_0_vs_costhetaT2_0",50, -1., 1., 50, -1.,1.);
+RJTool.bookHist(1,"costhetaT1_1_vs_costhetaT2_1",50, -1., 1., 50, -1.,1.);
 
-#     Mt1 = 175.;
-# 	MW1 = 80.;
-# 	Mt2 = 175.;
-# 	MW2 = 80.;
-# 	Mnu1 = 0.;
-# 	Mnu2 = 0.;
+
+
+#here, we set up the stuff for dynamic gamma
+h_gamma = TH1D("newgamma","newgamma",500,1.0,6.0);
+if b_gamma:
+	print "generating gamma distribution"
+	for ibin in xrange(500):
+		g = h_gamma.GetBinCenter(ibin);
+		# entry = Calc_dsigma_dgamma(g);
+
+		if entry > 0.:
+			# h_gamma.SetBinContent(ibin, entry);
+			h_gamma.SetBinContent(ibin, g);
+
+
+for i in xrange(N): // event generation loop
+	if b_gamma:
+      gamma = h_gamma.GetRandom();
+
+
+    # Event generation
+
+    Mt1 = 175.;
+	MW1 = 80.;
+	Mt2 = 175.;
+	MW2 = 80.;
+	Mnu1 = 0.;
+	Mnu2 = 0.;
 
 
 
