@@ -5,7 +5,7 @@
 from rootpy import *
 from ROOT import *
 
-gSystem.Load("./RJigsawTool");
+gSystem.Load("../StandAlone/libRJigsaw");
 
 
 #stuff for getting gamma distribution from PDF's
@@ -51,7 +51,7 @@ M = 175./1000.; #TeV units
 #Number of toy events to throw
 N = 100;
 
-RJTool = RJigsawTool.RJigsawTool()
+RJTool = ROOT.TRJigsaw()
 
 RJTool.initialize()
 RJTool.setHemisphereMode(1)
