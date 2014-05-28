@@ -363,6 +363,8 @@ void Root::TRJigsaw::getObservables(){
 
     // LL - maybe this needs to wait to be the first thing in the generation loop...
 
+// shit. This method can only handle cascades. Just keep that in mind for the future.
+
     for(int iGeneration = 1; iGeneration < hemisphere1Config.size()+1; iGeneration++){
 
 
