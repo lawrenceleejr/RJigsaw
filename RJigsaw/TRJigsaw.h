@@ -130,6 +130,7 @@ namespace Root {
       public:
         TString particleType;
         TLorentzVector particleMomentum;
+        TLorentzVector particleMomentumForBoosting;
         int hemisphere = 0;
       };
 
@@ -137,7 +138,7 @@ namespace Root {
 
       // Class member variables
 
-
+      TLorentzVector sumParticles(bool includeInvisible = true, int startingPoint = 0, int hemisphere = 0);
 
       std::vector< particleClass > truParticles;
       std::vector< particleClass > visParticles;
@@ -152,9 +153,8 @@ namespace Root {
 
       int hemiBalanceMode = 0;
 
-      bool pairProd = true; // true = pair prod, false = resonant
-      int nDecays = 2; //configurable via conf file
-      std::vector<std::vector<TString> > decayModel;
+      std::vector< std::vector<TString> > hemisphere1Config;
+      std::vector< std::vector<TString> > hemisphere2Config;
 
 
   public:

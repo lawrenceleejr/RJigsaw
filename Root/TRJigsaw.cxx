@@ -80,6 +80,7 @@ void Root::TRJigsaw::addVisParticle(
    particleClass particle;
    particle.particleType = particleType;
    particle.particleMomentum = particleMomentum;
+   particle.particleMomentumForBoosting = particleMomentum;
    visParticles.push_back( particle );
 
    return;
@@ -94,6 +95,7 @@ void Root::TRJigsaw::addTruParticle(
    particleClass particle;
    particle.particleType = particleType;
    particle.particleMomentum = particleMomentum;
+   particle.particleMomentumForBoosting = particleMomentum;
    truParticles.push_back( particle );
 
    return;
@@ -113,17 +115,19 @@ void Root::TRJigsaw::guessInvParticles(){
       for( int iparticle = 0; iparticle < truParticles.size(); iparticle++){
          if(truParticles.at(iparticle).particleType != "inv"){ continue;}
          
-         if(Inv1Empty){Inv1 = truParticles.at(iparticle).particleMomentum; Inv1Empty=0;}
-         else if(Inv2Empty) {Inv2 = truParticles.at(iparticle).particleMomentum; Inv2Empty=0;}
+         if(Inv1Empty){Inv1 = truParticles.at(iparticle).particleMomentumForBoosting; Inv1Empty=0;}
+         else if(Inv2Empty) {Inv2 = truParticles.at(iparticle).particleMomentumForBoosting; Inv2Empty=0;}
          else {assert(0); }
       }
 
       particleClass invParticle1;
       invParticle1.particleType = TString("inv");
       invParticle1.particleMomentum = Inv1;
+      invParticle1.particleMomentumForBoosting = Inv1;
       particleClass invParticle2;
       invParticle2.particleType = TString("inv");
       invParticle2.particleMomentum = Inv2;
+      invParticle2.particleMomentumForBoosting = Inv2;
 
       invParticles.push_back(invParticle1);
       invParticles.push_back(invParticle2);
@@ -140,8 +144,8 @@ void Root::TRJigsaw::guessInvParticles(){
    for( int iparticle = 0; iparticle < visParticles.size(); iparticle++){
       if(visParticles.at(iparticle).particleType != "b"){ continue;}
       
-      if(B1Empty){B1 = visParticles.at(iparticle).particleMomentum; B1Empty = 0;}
-      else if(B2Empty) {B2 = visParticles.at(iparticle).particleMomentum; B2Empty = 0;}
+      if(B1Empty){B1 = visParticles.at(iparticle).particleMomentumForBoosting; B1Empty = 0;}
+      else if(B2Empty) {B2 = visParticles.at(iparticle).particleMomentumForBoosting; B2Empty = 0;}
       //else {assert(0); }
    }
 
@@ -153,8 +157,8 @@ void Root::TRJigsaw::guessInvParticles(){
    for( int iparticle = 0; iparticle < visParticles.size(); iparticle++){
       if(visParticles.at(iparticle).particleType != "l"){ continue;}
       
-      if(L1Empty){L1 = visParticles.at(iparticle).particleMomentum; L1Empty=0;}
-      else if(L2Empty) {L2 = visParticles.at(iparticle).particleMomentum; L2Empty=0;}
+      if(L1Empty){L1 = visParticles.at(iparticle).particleMomentumForBoosting; L1Empty=0;}
+      else if(L2Empty) {L2 = visParticles.at(iparticle).particleMomentumForBoosting; L2Empty=0;}
       //else {assert(0); }
    }
 
@@ -252,9 +256,11 @@ void Root::TRJigsaw::guessInvParticles(){
    particleClass invParticle1;
    invParticle1.particleType = TString("inv");
    invParticle1.particleMomentum = Inv1;
+   invParticle1.particleMomentumForBoosting = Inv1;
    particleClass invParticle2;
    invParticle2.particleType = TString("inv");
    invParticle2.particleMomentum = Inv2;
+   invParticle2.particleMomentumForBoosting = Inv2;
 
    invParticles.push_back(invParticle1);
    invParticles.push_back(invParticle2);
@@ -280,90 +286,131 @@ void Root::TRJigsaw::guessInvParticles(){
 
 void Root::TRJigsaw::getObservables(){
 
-   //get b-quarks in lab frame
 
-   TLorentzVector B1,B2;
-   bool B1Empty=1, B2Empty=1;
 
-   for( int iparticle = 0; iparticle < visParticles.size(); iparticle++){
-      if(visParticles.at(iparticle).particleType != "b"){ continue;}
+   // //get b-quarks in lab frame
+
+   // TLorentzVector B1,B2;
+   // bool B1Empty=1, B2Empty=1;
+
+   // for( int iparticle = 0; iparticle < visParticles.size(); iparticle++){
+   //    if(visParticles.at(iparticle).particleType != "b"){ continue;}
       
-      if(B1Empty){B1 = visParticles.at(iparticle).particleMomentum; B1Empty=1;}
-      else if(B2Empty) {B2 = visParticles.at(iparticle).particleMomentum; B2Empty=1;}
-      else {assert(0); }
-   }
+   //    if(B1Empty){B1 = visParticles.at(iparticle).particleMomentum; B1Empty=1;}
+   //    else if(B2Empty) {B2 = visParticles.at(iparticle).particleMomentum; B2Empty=1;}
+   //    else {assert(0); }
+   // }
 
-   //get leptons in lab frame
+   // //get leptons in lab frame
 
-   TLorentzVector L1,L2;
-   bool L1Empty=1, L2Empty=1;
+   // TLorentzVector L1,L2;
+   // bool L1Empty=1, L2Empty=1;
 
-   for( int iparticle = 0; iparticle < visParticles.size(); iparticle++){
-      if(visParticles.at(iparticle).particleType != "l"){ continue;}
+   // for( int iparticle = 0; iparticle < visParticles.size(); iparticle++){
+   //    if(visParticles.at(iparticle).particleType != "l"){ continue;}
       
-      if(L1Empty){L1 = visParticles.at(iparticle).particleMomentum; L1Empty=1;}
-      else if(L2Empty) {L2 = visParticles.at(iparticle).particleMomentum;L2Empty=1; }
-      else {assert(0); }
-   }
+   //    if(L1Empty){L1 = visParticles.at(iparticle).particleMomentum; L1Empty=1;}
+   //    else if(L2Empty) {L2 = visParticles.at(iparticle).particleMomentum;L2Empty=1; }
+   //    else {assert(0); }
+   // }
 
-   assert(invParticles.size()==2);
-   TLorentzVector NU1 = invParticles[0].particleMomentum;
-   TLorentzVector NU2 = invParticles[1].particleMomentum;
-
-    TLorentzVector H1 = L1+B1+NU1;
-    TLorentzVector H2 = L2+B2+NU2;
+   // assert(invParticles.size()==2);
+   // TLorentzVector NU1 = invParticles[0].particleMomentumForBoosting;
+   // TLorentzVector NU2 = invParticles[1].particleMomentumForBoosting;
 
 
-    //In the lab frame - let's move now to the ttbar CM frame
-    //boosts
+   // let's assume I have all the particles I need and they have hemisphere associations
+
+
+    ////////////////////////////////////////////////////////////
+    // Contruct our hemisphere momenta
+    ////////////////////////////////////////////////////////////
+
+    // for each hemisphere, take the first line
+    // TLorentzVector H_N = sum of these particles
+    TLorentzVector H1    = sumParticles(true, 0, -1, 0, 1);
+    TLorentzVector H1Vis = sumParticles(false, 0, -1, 0, 1);
+    TLorentzVector H2    = sumParticles(true, 0, -1, 0, 2);
+    TLorentzVector H2Vis = sumParticles(false, 0, -1, 0, 2);
+
+    ////////////////////////////////////////////////////////////
+    // Let's move from the lab frame to the first rest frame
+    ////////////////////////////////////////////////////////////
+
+    // Calculate the boost vector
     TVector3 BltoCM = (H1+H2).BoostVector();
 
+    // Do the boosting
+    for( int jparticle = 0; jparticle < invParticles.size(); jparticle++){ invParticles.at(jparticle).particleMomentumForBoosting.Boost(-BltoCM);  }
+    for( int jparticle = 0; jparticle < visParticles.size(); jparticle++){ visParticles.at(jparticle).particleMomentumForBoosting.Boost(-BltoCM);  }
     H1.Boost(-BltoCM);
     H2.Boost(-BltoCM);
-    L1.Boost(-BltoCM);
-    L2.Boost(-BltoCM);
-    NU1.Boost(-BltoCM);
-    NU2.Boost(-BltoCM);
-    B1.Boost(-BltoCM);
-    B2.Boost(-BltoCM);
+
+    // Now everything is in the rest frame of H1+H2!
+
+    ////////////////////////////////////////////////////////////
+    // Let's calculate some observables in this frame
+    ////////////////////////////////////////////////////////////
 
     //angles
-    observables[ "costhetaTT_"+TString(hemiBalanceMode) ]     = fabs( H1.Vect().Unit().Dot( BltoCM.Unit() ));
-    observables[ "dphiTT_"+TString(hemiBalanceMode) ]        = fabs(H1.Vect().DeltaPhi( BltoCM ));
-    observables[ "dphiM_"+TString(hemiBalanceMode) ]        = fabs( (B1+B2+L1+L2).Vect().DeltaPhi( BltoCM ));
+    observables[ "costheta_"+TString(hemiBalanceMode)+TString(0) ]     = fabs( H1.Vect().Unit().Dot( BltoCM.Unit() ));
+    observables[ "dphi_"+TString(hemiBalanceMode)+TString(0) ]        = fabs( H1.Vect().DeltaPhi( BltoCM ));
+    observables[ "dphiM_"+TString(hemiBalanceMode)+TString(0) ]        = fabs( (H1Vis+H2Vis).Vect().DeltaPhi( BltoCM ));
     //scale
-    observables[ "MTT_"+TString(hemiBalanceMode) ]  = (H1+H2).M();
+    observables[ "M_"+TString(hemiBalanceMode)+TString(0) ]  = (H1+H2).M();
 
+
+
+    // LL - maybe this needs to wait to be the first thing in the generation loop...
+
+    for(int iGeneration = 1; iGeneration < hemisphere1Config.size()+1; iGeneration++){
+
+
+    }
+
+    // It's really important that the particles from later decays show up later in the config line
+    TLorentzVector tmpIntermediateParticle1 = sumParticles(true, 1, -1, 0, 1);
+    TLorentzVector tmpIntermediateParticle2 = sumParticles(true, 1, -1, 0, 2);
+
+    TLorentzVector tmpSurvivorParticle1 = sumParticles(true, 0, 1, 0, 1)
+    TLorentzVector tmpSurvivorParticle2 = sumParticles(true, 0, 1, 0, 2)
 
     //vector normal to decay plane of CM frame
-    TVector3 vNORM_CM_T1 = B1.Vect().Cross((L1+NU1).Vect());
-    TVector3 vNORM_CM_T2 = B2.Vect().Cross((L2+NU2).Vect());
+    TVector3 vNORM_CM_T1 = tmpSurvivorParticle1.Vect().Cross(tmpIntermediateParticle1.Vect());
+    TVector3 vNORM_CM_T2 = tmpSurvivorParticle2.Vect().Cross(tmpIntermediateParticle2.Vect());
 
-    observables["dphi_T1_T2_"+TString(hemiBalanceMode) ]  = vNORM_CM_T1.Angle(vNORM_CM_T2);
-    observables["dot_dphi_T1_T2_"+TString(hemiBalanceMode) ]  = B1.Vect().Dot(vNORM_CM_T2);
-    if(observables["dot_dphi_T1_T2_"+TString(hemiBalanceMode) ]  < 0.0 && observables["dphi_T1_T2_"+TString(hemiBalanceMode) ]  > 0.0){
-      observables["dphi_T1_T2_"+TString(hemiBalanceMode) ]  = TMath::Pi()*2. - observables["dphi_T1_T2"];
+    observables["dphi_1_2_"+TString(hemiBalanceMode)+TString(0) ]  = vNORM_CM_T1.Angle(vNORM_CM_T2);
+    observables["dot_dphi_1_2_"+TString(hemiBalanceMode)+TString(0) ]  = tmpSurvivorParticle1.Vect().Dot(vNORM_CM_T2);
+    if(observables["dot_dphi_1_2_"+TString(hemiBalanceMode)+TString(0) ]  < 0.0 && observables["dphi_1_2_"+TString(hemiBalanceMode)+TString(0) ]  > 0.0){
+      observables["dphi_1_2_"+TString(hemiBalanceMode)+TString(0) ]  = TMath::Pi()*2. - observables["dphi_1_2"];
     }
+
+    ///////////////////////////////////////////
+   // for each hemisphere
+   // for each line in hemisphere config
+   // TLorentzVector myBoost = sum of each of the momenta of those particles in the previous frame
+   // boost all particles in that hemisphere to this frame (top rest frame)
+   // get observables
+    /////////////////////////////////////////
 
     //To the next frames!!!!
     //now, to 'top' CM frame approxs
-    TVector3 BCMtoT1 = H1.BoostVector();
-    TVector3 BCMtoT2 = H2.BoostVector();
+    TVector3 tmpBoostVector1 = H1.BoostVector();
+    TVector3 tmpBoostVector2 = H2.BoostVector();
 
+    B1.Boost(-tmpBoostVector1);
+    B2.Boost(-tmpBoostVector2);
+    L1.Boost(-tmpBoostVector1);
+    L2.Boost(-tmpBoostVector2);
+    NU1.Boost(-tmpBoostVector1);
+    NU2.Boost(-tmpBoostVector2);
 
-    B1.Boost(-BCMtoT1);
-    B2.Boost(-BCMtoT2);
-    L1.Boost(-BCMtoT1);
-    L2.Boost(-BCMtoT2);
-    NU1.Boost(-BCMtoT1);
-    NU2.Boost(-BCMtoT2);
-
-    observables["costhetaT1_"+TString(hemiBalanceMode) ]  = B1.Vect().Unit().Dot(BCMtoT1.Unit());
-    observables["costhetaT2_"+TString(hemiBalanceMode) ]  = B2.Vect().Unit().Dot(BCMtoT2.Unit());
+    observables["costhetaT1_"+TString(hemiBalanceMode) ]  = B1.Vect().Unit().Dot(tmpBoostVector1.Unit());
+    observables["costhetaT2_"+TString(hemiBalanceMode) ]  = B2.Vect().Unit().Dot(tmpBoostVector2.Unit());
 
     //vectors normal to decay planes of T frames
-    TVector3 vNORM_T1_B = B1.Vect().Cross(BCMtoT1);
-    TVector3 vNORM_T2_B = B2.Vect().Cross(BCMtoT2);
+    TVector3 vNORM_T1_B = B1.Vect().Cross(tmpBoostVector1);
+    TVector3 vNORM_T2_B = B2.Vect().Cross(tmpBoostVector2);
     //vectors normal to W decay planes in T frames
     TVector3 vNORM_T1_W = L1.Vect().Cross(NU1.Vect());
     TVector3 vNORM_T2_W = L2.Vect().Cross(NU2.Vect());
@@ -401,6 +448,46 @@ void Root::TRJigsaw::bookHist(int dimension, TString expression,
    }
 
    return;
+
+}
+
+TLorentzVector Root::TRJigsaw::sumParticles(bool includeInvisible = true, int startingParticle = 0, int endingParticle = -1, int generation = 0, int hemisphere = 0){
+
+    TLorentzVector tmpSum(0,0,0,0);
+    if(hemisphere==1){
+      if(endingParticle == -1) endingParticle = hemisphere1Config[generation].size()
+      for(int iparticle=startingParticle; iparticle<endingParticle; iparticle++){
+        if(hemisphere1Config[generation][iparticle]=="nu" && includeInvisible){
+          for( int jparticle = 0; jparticle < invParticles.size(); jparticle++){
+            if(invParticles.at(jparticle).hemisphere != 1 ) continue;
+            tmpSum = tmpSum + invParticles.at(jparticle).particleMomentumForBoosting;
+          }
+        }
+        for( int jparticle = 0; jparticle < visParticles.size(); jparticle++){
+          if(visParticles.at(jparticle).particleType != hemisphere1Config[generation][iparticle] ) continue;
+          if(visParticles.at(jparticle).hemisphere != 1 ) continue;
+          tmpSum = tmpSum + invParticles.at(jparticle).particleMomentumForBoosting;
+        }
+      }
+    }
+    else if(hemisphere==2){
+      if(endingParticle == -1) endingParticle = hemisphere2Config[generation].size()
+      for(int iparticle=startingParticle; iparticle<endingParticle; iparticle++){
+        if(hemisphere2Config[generation][iparticle]=="nu" && includeInvisible){
+          for( int jparticle = 0; jparticle < invParticles.size(); jparticle++){
+            if(invParticles.at(jparticle).hemisphere != 2 ) continue;
+            tmpSum = tmpSum + invParticles.at(jparticle).particleMomentumForBoosting;
+          }
+        }
+        for( int jparticle = 0; jparticle < visParticles.size(); jparticle++){
+          if(visParticles.at(jparticle).particleType != hemisphere2Config[generation][iparticle] ) continue;
+          if(visParticles.at(jparticle).hemisphere != 2 ) continue;
+          tmpSum = tmpSum + invParticles.at(jparticle).particleMomentumForBoosting;
+        }
+      }
+    }
+
+    return tmpSum;
 
 }
 
