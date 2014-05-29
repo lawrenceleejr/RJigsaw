@@ -127,7 +127,9 @@ protected:
 
 	  // Class member variables
 
-  TLorentzVector sumParticles(bool includeInvisible = true, int startingParticle = 0, int endingParticle = -1, int generation = 0, int hemisphere = 0);
+  TLorentzVector sumParticles(bool includeInvisible, int startingParticle , int endingParticle , int generation , int hemisphere );
+	void boostParticles(TVector3 boost, bool includeInvisible, int startingParticle, int endingParticle, int generation, int hemisphere);
+
 
   std::vector< particleClass > truParticles;
   std::vector< particleClass > visParticles;
