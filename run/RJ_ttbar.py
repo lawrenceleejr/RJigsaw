@@ -91,7 +91,7 @@ if b_gamma:
 			h_gamma.SetBinContent(ibin, g);
 
 
-for i in xrange(N): // event generation loop
+for i in xrange(N): 
 	if b_gamma:
       gamma = h_gamma.GetRandom();
 
