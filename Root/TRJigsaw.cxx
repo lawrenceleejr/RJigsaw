@@ -26,7 +26,7 @@ Description:
 #include <TH2D.h>
 #include <TH3D.h>
 #include <TAxis.h>
-#include <TString.h>
+#include <TString::h>
 #include <TRandom3.h>
 #include <assert.h>
 
@@ -132,8 +132,8 @@ void Root::TRJigsaw::guessInvParticles(){
 
 
 		//Now, we need to 'guess' the invariant mass of the weakly interacting system
-		double HM2min = min(H1.M2(), H2.M2() );
-		double HM2max = max(H1.M2(), H2.M2() );
+		double HM2min = std::min(H1.M2(), H2.M2() );
+		double HM2max = std::max(H1.M2(), H2.M2() );
 
 		double Minv2 = (H1+H2).M2() - 4.*HM2min;
 
@@ -235,7 +235,8 @@ void Root::TRJigsaw::getObservables(){
 	TVector3 decayPlaneVector2;
 
 		// This just makes things easier for the first vertex
-	std::vector<TString> dummyVector = ["system"];
+	std::vector<TString> dummyVector;
+	dummyVector.push_back("system");
 	hemisphereConfig[0].push_back(dummyVector);
 
 
@@ -307,26 +308,26 @@ void Root::TRJigsaw::getObservables(){
 				////////////////////////////////////////////////////////////
 
 				// angles
-				observables[ TString.Format("cosTheta_%d_%d_%d", iHemisphere, iGeneration, hemiBalanceMode) ]     = fabs( leg1.Vect().Unit().Dot( tmpBoostVector.Unit() ));
-				observables[ TString.Format("dPhi_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode) ]        = fabs( leg1.Vect().DeltaPhi( tmpBoostVector ));
-				observables[ TString.Format("dPhiVis_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)  ]    = fabs( (leg1Vis+leg2Vis).Vect().DeltaPhi( tmpBoostVector ));
+				observables[ TString::Format("cosTheta_%d_%d_%d", iHemisphere, iGeneration, hemiBalanceMode) ]     = fabs( leg1.Vect().Unit().Dot( tmpBoostVector.Unit() ));
+				observables[ TString::Format("dPhi_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode) ]        = fabs( leg1.Vect().DeltaPhi( tmpBoostVector ));
+				observables[ TString::Format("dPhiVis_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)  ]    = fabs( (leg1Vis+leg2Vis).Vect().DeltaPhi( tmpBoostVector ));
 				// scale
-				observables[ TString.Format("M_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode) ]  = (leg1+leg2).M();
+				observables[ TString::Format("M_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode) ]  = (leg1+leg2).M();
 
 				// acoplanarity-type angles
 				decayPlaneVector1 = leg1_1.Vect().Cross(leg1_2.Vect());
 				decayPlaneVector2 = leg2_1.Vect().Cross(leg2_2.Vect());
 
-				observables[ TString.Format("dPhiDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)  ]  = decayPlaneVector1.Angle(decayPlaneVector2);
-				observables[ TString.Format("codThetaDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)  ]  = leg1_1.Vect().Dot(decayPlaneVector2);
-				if( observables[ TString.Format("codThetaDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)  ] < 0.0 && 
-					observables[ TString.Format("dPhiDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)      ] > 0.0 ){
-					observables[ TString.Format("dPhiDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode) ] *= 1.0;
-				observables[ TString.Format("dPhiDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode) ] +=  TMath::Pi()*2. ; 
+				observables[ TString::Format("dPhiDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)  ]  = decayPlaneVector1.Angle(decayPlaneVector2);
+				observables[ TString::Format("codThetaDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)  ]  = leg1_1.Vect().Dot(decayPlaneVector2);
+				if( observables[ TString::Format("codThetaDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)  ] < 0.0 && 
+					observables[ TString::Format("dPhiDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)      ] > 0.0 ){
+					observables[ TString::Format("dPhiDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode) ] *= 1.0;
+				observables[ TString::Format("dPhiDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode) ] +=  TMath::Pi()*2. ; 
 			}
 
 				// gamma observable
-			observables[ TString.Format("gamma_%d_%d_%d",iHemisphere, iGeneration, hemiBalanceMode) ] = 
+			observables[ TString::Format("gamma_%d_%d_%d",iHemisphere, iGeneration, hemiBalanceMode) ] = 
 			1./pow( (1.-leg1.BoostVector().Mag2())*(1.-leg2.BoostVector().Mag2()),1./4. );
 
 		}
@@ -356,7 +357,7 @@ void Root::TRJigsaw::bookHist(int dimension, TString expression,
 
 }
 
-TLorentzVector Root::TRJigsaw::sumParticles(bool includeInvisible = true, int startingParticle = 0, int endingParticle = -1, int generation = 0, int hemisphere = 0){
+TLorentzVector Root::TRJigsaw::sumParticles(bool includeInvisible, int startingParticle = 0, int endingParticle = -1, int generation = 0, int hemisphere = 0){
 
 	TLorentzVector tmpSum(0,0,0,0);
 	if(endingParticle == -1) endingParticle = hemisphereConfig[hemisphere][generation].size();
