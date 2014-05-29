@@ -383,7 +383,7 @@ void Root::TRJigsaw::boostParticles(TVector3 boost, bool includeInvisible = true
 
 	TLorentzVector tmpSum(0,0,0,0);
 	if(hemisphere){
-		if(endingParticle == -1) endingParticle = hemisphereConfig[hemisphere][generation].size()
+		if(endingParticle == -1) endingParticle = hemisphereConfig[hemisphere][generation].size();
 			for(int iparticle=startingParticle; iparticle<endingParticle; iparticle++){
 				if(hemisphereConfig[hemisphere][generation][iparticle]=="nu" && includeInvisible){
 					for( int jparticle = 0; jparticle < invParticles.size(); jparticle++){
@@ -398,8 +398,8 @@ void Root::TRJigsaw::boostParticles(TVector3 boost, bool includeInvisible = true
 				}
 			}
 		} else {
-			boostParticles(boost,includeInvisible,startingParticle,endingParticle,generation,1)
-			boostParticles(boost,includeInvisible,startingParticle,endingParticle,generation,2)
+			boostParticles(boost,includeInvisible,startingParticle,endingParticle,generation,1);
+			boostParticles(boost,includeInvisible,startingParticle,endingParticle,generation,2);
 		}
 
 		return;
