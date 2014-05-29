@@ -197,6 +197,7 @@ RJTool->getObservables();
 
 
 }
+}
 
 void BoostToLabFrame(double gamma_eff){
     double M1 = P[0].M();
