@@ -10,7 +10,7 @@
    @brief Tools to calculate Jigsaw variables
 
    @author  Lawrence Lee
-            Based on the original tool by Chris Rogan and Paul Jackson
+            Based on the original work by Chris Rogan and Paul Jackson
 */
 
 //#include "particleClass.h"
@@ -44,9 +44,6 @@ class TFile;
 
 
 
-
-
-
 namespace Root {
 
   class TRJigsaw : public TNamed {
@@ -62,18 +59,7 @@ namespace Root {
 
       // initializeRJigsaw /////////////
       // Read in config file that will look like...
-      //
-      // RJigsaw.conf
-      // ---------------
-      // t t
-      // t b w
-      // w l n
-      // t 175
-      // w 80
-      // b 0
-      // l 0
-      // n 0
-      // ----------------
+      // ...something
 
       void newEvent(){
         truParticles.clear();
@@ -153,8 +139,7 @@ namespace Root {
 
       int hemiBalanceMode = 0;
 
-      std::vector< std::vector<TString> > hemisphere1Config;
-      std::vector< std::vector<TString> > hemisphere2Config;
+      std::vector< std::vector<TString> > hemisphereConfig[3];
 
 
   public:
