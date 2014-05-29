@@ -91,7 +91,8 @@ void Root::TRJigsaw::addVisParticle(
 
 void Root::TRJigsaw::addTruParticle(
 	TString particleType,
-	TLorentzVector particleMomentum
+	TLorentzVector particleMomentum,
+	int hemisphere = 0
 	){
 
 	particleClass particle;
@@ -162,11 +163,11 @@ void Root::TRJigsaw::guessInvParticles(){
 		Inv1.Boost(BL);
 		Inv2.Boost(BL);
 
-	 } else if(hemiBalanceMode==1){
+	} else if(hemiBalanceMode==1){
 
-	 	TLorentzVector L1, L2;
-	 	L1 = sumParticles(false, 0, -1, 1, 1)
-	 	L2 = sumParticles(false, 0, -1, 1, 2)
+		TLorentzVector L1, L2;
+		L1 = sumParticles(false, 0, -1, 1, 1);
+		L2 = sumParticles(false, 0, -1, 1, 2);
 
 		//Now, we need to 'guess' the invariant mass of the weakly interacting system
 		double Minv2 = (L1+L2).M2();
@@ -195,29 +196,29 @@ void Root::TRJigsaw::guessInvParticles(){
 		Inv1.Boost(BL);
 		Inv2.Boost(BL);
 
-	 } else { assert(0); }
+	} else { assert(0); }
 
-	 particleClass invParticle1;
-	 invParticle1.particleType = TString("inv");
-	 invParticle1.particleMomentum = Inv1;
-	 invParticle1.particleMomentumForBoosting = Inv1;
-	 invParticle1.hemisphere = 1
+	particleClass invParticle1;
+	invParticle1.particleType = TString("inv");
+	invParticle1.particleMomentum = Inv1;
+	invParticle1.particleMomentumForBoosting = Inv1;
+	invParticle1.hemisphere = 1;
 
-	 particleClass invParticle2;
-	 invParticle2.particleType = TString("inv");
-	 invParticle2.particleMomentum = Inv2;
-	 invParticle2.particleMomentumForBoosting = Inv2;
-	 invParticle2.hemisphere = 2;
+	particleClass invParticle2;
+	invParticle2.particleType = TString("inv");
+	invParticle2.particleMomentum = Inv2;
+	invParticle2.particleMomentumForBoosting = Inv2;
+	invParticle2.hemisphere = 2;
 
-	 invParticles.push_back(invParticle1);
-	 invParticles.push_back(invParticle2);
+	invParticles.push_back(invParticle1);
+	invParticles.push_back(invParticle2);
 
-	 return;
+	return;
 
-	}
+}
 
 
-	void Root::TRJigsaw::getObservables(){
+void Root::TRJigsaw::getObservables(){
 
 		///////////////////////////////////////////////////////////
 		// This thing is supposed to be recursive, so let's do it
@@ -225,16 +226,17 @@ void Root::TRJigsaw::guessInvParticles(){
 
 		// Let's declare some stuff ahead of the loop
 
-		TVector3 tmpBoostVector;
-		TLorentzVector leg1, leg1Vis
-		TLorentzVector leg2, leg2Vis;
-		TLorentzVector leg1_1, leg1_2;
-		TLorentzVector leg2_1, leg2_2;
-		TVector3 decayPlaneVector1;
-		TVector3 decayPlaneVector2;
+	TVector3 tmpBoostVector;
+	TLorentzVector leg1, leg1Vis;
+	TLorentzVector leg2, leg2Vis;
+	TLorentzVector leg1_1, leg1_2;
+	TLorentzVector leg2_1, leg2_2;
+	TVector3 decayPlaneVector1;
+	TVector3 decayPlaneVector2;
 
 		// This just makes things easier for the first vertex
-		hemisphereConfig[0].push_back("system");
+	std::vector<TString> dummyVector = ["system"];
+	hemisphereConfig[0].push_back(dummyVector);
 
 
 		///////////////////////////////////////////////////////////
@@ -243,7 +245,7 @@ void Root::TRJigsaw::guessInvParticles(){
 		// iHemisphere = 0: H1+H2 Frame 
 		///////////////////////////////////////////////////////////
 
-		for( int iHemisphere = 0; iHemisphere < 3; iHemisphere++){
+	for( int iHemisphere = 0; iHemisphere < 3; iHemisphere++){
 			for( int iGeneration = 0; iGeneration < hemisphereConfig[iHemisphere].size(); iGeneration++ ){ // iGeneration is index in config file line
 
 				// Really can't boost the first vertex more than once
