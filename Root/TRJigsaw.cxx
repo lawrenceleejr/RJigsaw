@@ -26,7 +26,7 @@ Description:
 #include <TH2D.h>
 #include <TH3D.h>
 #include <TAxis.h>
-#include <TString::h>
+#include <TString.h>
 #include <TRandom3.h>
 #include <assert.h>
 
