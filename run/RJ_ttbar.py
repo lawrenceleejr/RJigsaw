@@ -53,7 +53,7 @@ N = 100;
 
 RJTool = Root.TRJigsaw()
 
-# RJTool.initialize("")
+RJTool.initialize("")
 RJTool.setHemisphereMode(1)
 print RJTool.getHemisphereMode()
 
@@ -93,12 +93,12 @@ if b_gamma:
 
 for i in xrange(N): 
 	if b_gamma:
-      gamma = h_gamma.GetRandom();
+		gamma = h_gamma.GetRandom();
 
 
-    # Event generation
+	# Event generation
 
-    Mt1 = 175.;
+	Mt1 = 175.;
 	MW1 = 80.;
 	Mt2 = 175.;
 	MW2 = 80.;

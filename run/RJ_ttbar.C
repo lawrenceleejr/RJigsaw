@@ -12,7 +12,7 @@
 #include <vector>
 #include <TLegend.h>
 
-#include "../RJigsaw/TRJigsaw.h"
+#include "TRJigsaw.h"
 
 using namespace std; 
 
@@ -90,6 +90,8 @@ int N = 100;
 Root::TRJigsaw* RJTool = new Root::TRJigsaw();
 
 //setup histograms
+
+//RJTool->initialize("test");
 RJTool->resetHists();
 
 //

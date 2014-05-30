@@ -56,7 +56,7 @@
 	  /** Standard destructor */
 				  ~TRJigsaw();
 
-				  void initialize(std::string filename);
+			    //void initialize(std::string filename);
 
 	  // initializeRJigsaw /////////////
 	  // Read in config file that will look like...
