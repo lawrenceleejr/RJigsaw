@@ -66,7 +66,7 @@ void GetLepTopHem(int iHem, double Mtop, double MW, double Mb, double Mlep, doub
 
 TCanvas* Plot_Me_2D(char *titlecan, TH2D* histo, char *titleX, char *titleY);
 
-void RJ_ttbar(){
+int main(){
     setstyle();
 
 //give transverse momenta to CM system in lab frame?
@@ -197,6 +197,9 @@ RJTool->getObservables();
 
 
 }
+
+ return 0;
+
 }
 
 void BoostToLabFrame(double gamma_eff){
