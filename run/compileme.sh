@@ -1,0 +1,1 @@
+gcc -m32 -Wall -I../RJigsaw/ -I./ -I$ROOTSYS/include -L$ROOTSYS/lib -L../StandAlone/ `root-config --cflags`  `root-config --glibs`  ../StandAlone/libRJigsaw.so RJ_ttbar.C -lRJigsaw
