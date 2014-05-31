@@ -118,6 +118,9 @@ int main(){
 	////////////////////////////////////////////////////////////
 
 	RJTool->bookHist1D("M_0_0_0",100.,0.,1000.);
+	RJTool->bookHist1D("M_0_0_1",100.,0.,1000.);
+	RJTool->bookHist1D("M_0_0_-1",100.,0.,1000.);
+
 	RJTool->bookHist2D("M_0_0_0","dPhi_0_0_0", 100. , 0. , 1000. , 100. , 0. , TMath::Pi()   ); //(x, y, xaxis, yaxis)
 	RJTool->bookHist2D("M_1_0_0","M_2_0_0", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
 	RJTool->bookHist2D("M_1_0_0","M_1_0_1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
@@ -127,6 +130,8 @@ int main(){
 	RJTool->bookHist2D("M_1_1_0","M_1_1_1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
 	RJTool->bookHist2D("M_2_1_0","M_2_1_1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
 
+	RJTool->bookHist2D("M_1_0_0","M_1_0_-1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+	RJTool->bookHist2D("M_2_0_0","M_2_0_-1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
 
 	////////////////////////////////////////////////////////////
 	// Generate fake events taking flat ME's for all decay angles
@@ -212,6 +217,12 @@ int main(){
 		RJTool->addVisParticle("l",C_1_1[0],1);
 		RJTool->addVisParticle("l",C_1_1[1],2);
 
+
+		// Give truth nus to the tool
+
+		RJTool->addVisParticle("nu",vMiss[0],1);
+		RJTool->addVisParticle("nu",vMiss[1],2);
+
 		// Let's construct a fake MET vector
 
 		TVector3 MET = (vMiss[0]+vMiss[1]).Vect();
@@ -238,6 +249,12 @@ int main(){
 		// Try again with other Hemisphere mode
 
 		RJTool->setHemisphereMode(1); //W symmetry
+		RJTool->guessInvParticles();
+		RJTool->getObservables();
+
+		// Try again using true neutrinos
+
+		RJTool->setHemisphereMode(-1); //W symmetry
 		RJTool->guessInvParticles();
 		RJTool->getObservables();
 

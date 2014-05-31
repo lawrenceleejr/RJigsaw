@@ -151,6 +151,7 @@ namespace Root {
 
 		void boostParticles(TVector3 boost, bool includeInvisible, int startingParticle, int endingParticle, int generation, int hemisphere);
 
+		TLorentzVector findTruParticleMomentum(TString particleType, int hemisphere);
 
 		std::vector< particleClass > truParticles;
 		std::vector< particleClass > visParticles;
