@@ -104,11 +104,11 @@ int main(){
 	// // scale
 	// "M_%d_%d_%d" 
 	// "dPhiDecay_%d_%d_%d" 
-	// "codThetaDecay_%d_%d_%d" 
-	// "codThetaDecay_%d_%d_%d" 
+	// "cosThetaDecay_%d_%d_%d" 
+	// "cosThetaDecay_%d_%d_%d" 
 	// "dPhiDecay_%d_%d_%d" 
 	// "dPhiDecay_%d_%d_%d" 
-	// "dPhiDecay_%d_%d_%d" 
+	// "dPhiDecay_%d_%ßd_%d" 
 	// "gamma_%d_%d_%d"
 
 	////////////////////////////////////////////////////////////
@@ -132,6 +132,32 @@ int main(){
 
 	RJTool->bookHist2D("M_1_0_0","M_1_0_-1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
 	RJTool->bookHist2D("M_2_0_0","M_2_0_-1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+
+	RJTool->bookHist2D("M_1_0_1","M_1_0_-1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+	RJTool->bookHist2D("M_2_0_1","M_2_0_-1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+
+	// Replicating original code
+
+	RJTool->bookHist2D("dPhi_0_0_-1","dPhi_0_0_0", 50. , 0. , TMath::Pi()   , 50. , 0. , TMath::Pi()   ); 
+	RJTool->bookHist2D("dPhi_0_0_-1","dPhi_0_0_1", 50. , 0. , TMath::Pi()   , 50. , 0. , TMath::Pi()   ); 
+
+	RJTool->bookHist2D("dPhiVis_0_0_-1","dPhiVis_0_0_0", 50. , 0. , TMath::Pi()   , 50. , 0. , TMath::Pi()   ); 
+	RJTool->bookHist2D("dPhiVis_0_0_-1","dPhiVis_0_0_1", 50. , 0. , TMath::Pi()   , 50. , 0. , TMath::Pi()   ); 
+
+	RJTool->bookHist2D("dPhi_0_0_-1","dPhiVis_0_0_-1", 50. , 0. , TMath::Pi()   , 50. , 0. , TMath::Pi()   ); 
+	RJTool->bookHist2D("dPhi_0_0_0","dPhiVis_0_0_0", 50. , 0. , TMath::Pi()   , 50. , 0. , TMath::Pi()   ); 
+	RJTool->bookHist2D("dPhi_0_0_1","dPhiVis_0_0_1", 50. , 0. , TMath::Pi()   , 50. , 0. , TMath::Pi()   ); 
+
+	RJTool->bookHist2D("M_0_0_0","dPhiVis_0_0_0", 50. , 0. , 1000.  , 50. , 0. , TMath::Pi()   ); 
+	RJTool->bookHist2D("M_0_0_1","dPhiVis_0_0_1", 50. , 0. , 1000.  , 50. , 0. , TMath::Pi()   ); 
+
+	RJTool->bookHist2D("gamma_0_0_-1","gamma_0_0_0", 5000. , 0. , 2 , 5000. , 0. , 2 ); 
+	RJTool->bookHist2D("gamma_0_0_-1","gamma_0_0_1", 5000. , 0. , 2 , 5000. , 0. , 2 ); 
+
+
+
+
+
 
 	////////////////////////////////////////////////////////////
 	// Generate fake events taking flat ME's for all decay angles
@@ -220,12 +246,12 @@ int main(){
 
 		// Give truth nus to the tool
 
-		RJTool->addVisParticle("nu",vMiss[0],1);
-		RJTool->addVisParticle("nu",vMiss[1],2);
+		RJTool->addVisParticle("nu",C_1_2[0],1);
+		RJTool->addVisParticle("nu",C_1_2[1],2);
 
 		// Let's construct a fake MET vector
 
-		TVector3 MET = (vMiss[0]+vMiss[1]).Vect();
+		TVector3 MET = (C_1_2[0]+C_1_2[1]).Vect();
 		MET.SetZ(0.0);
 
 		// And then tell the tool about it
@@ -493,8 +519,8 @@ double PDF_TOT(double x){
 double Calc_dsigma_dgamma(double gamma){
 
 	C = 4.*gamma*gamma*M*M/(rootS*rootS);
-	// TF1 *func = new TF1("func","PDF_TOT(x)",0,10);
-	TF1 *func = new TF1("func","1/x",0,10);
+	//TF1 *func = new TF1("func","PDF_TOT(x)",0,10);
+	TF1 *func = new TF1("func","1",0,10);
 
 	double ret;
 

@@ -282,6 +282,8 @@ void Root::TRJigsaw::guessInvParticles(){
 
 void Root::TRJigsaw::getObservables(){
 
+	std::cout << "in getObservables" << std::endl;
+
 	// Let's declare some stuff ahead of the loop
 
 	TVector3 tmpBoostVector;
@@ -318,7 +320,6 @@ void Root::TRJigsaw::getObservables(){
 					leg1Vis = sumParticles(false, 0, -1, 0, 1);
 					leg2    = sumParticles(true, 0, -1, 0, 2);
 					leg2Vis = sumParticles(false, 0, -1, 0, 2);
-
 					leg1_1  = sumParticles(true, 0, -1, 1, 1); // Child of legN
 					leg2_1  = sumParticles(true, 0, -1, 1, 2);
 
@@ -342,7 +343,7 @@ void Root::TRJigsaw::getObservables(){
 
 				// Do the boosting for all relevant particles
 
-				boostParticles(-tmpBoostVector, true, 0, -1, iGeneration, iHemisphere); 
+				// boostParticles(-tmpBoostVector, true, 0, -1, iGeneration, iHemisphere); 
 
 				// and momentum sums
 
@@ -387,9 +388,15 @@ void Root::TRJigsaw::getObservables(){
 				// Gamma observable
 				observables[ TString::Format("gamma_%d_%d_%d",iHemisphere, iGeneration, hemiBalanceMode) ] = 
 				1./pow( (1.-leg1.BoostVector().Mag2())*(1.-leg2.BoostVector().Mag2()),1./4. );
+				
+				std::cout << leg1.BoostVector().Mag2() << std::endl;
+				std::cout << leg2.BoostVector().Mag2() << std::endl;
+				std::cout << 1./pow( (1.-leg1.BoostVector().Mag2())*(1.-leg2.BoostVector().Mag2()),1./4. ) << std::endl;
 
 			}
 	}
+
+	unboostParticles(true, 0, -1, 0, 0); 
 
 	return;
 
@@ -410,7 +417,7 @@ TLorentzVector Root::TRJigsaw::sumParticles(bool includeInvisible, int startingP
 		if(hemisphereConfig[hemisphere][generation][iparticle]=="nu" && includeInvisible){
 			for( int jparticle = 0; jparticle < invParticles.size(); jparticle++){
 				// //std::cout << jparticle << "/" << invParticles.size() << std::endl;
-				if(invParticles.at(jparticle).hemisphere != 1 ) continue; // IS THIS RIGHT??????????????????????
+				if(invParticles.at(jparticle).hemisphere != hemisphere ) continue; // IS THIS RIGHT??????????????????????
 				tmpSum = tmpSum + invParticles.at(jparticle).particleMomentumForBoosting;
 			}
 			continue;
@@ -418,7 +425,7 @@ TLorentzVector Root::TRJigsaw::sumParticles(bool includeInvisible, int startingP
 		for( int jparticle = 0; jparticle < visParticles.size(); jparticle++){
 			// //std::cout << jparticle << "/" << visParticles.size() << std::endl;
 			if(visParticles.at(jparticle).particleType != hemisphereConfig[hemisphere][generation][iparticle] ) continue;
-			if(visParticles.at(jparticle).hemisphere != 1 ) continue;
+			if(visParticles.at(jparticle).hemisphere != hemisphere ) continue;
 			tmpSum = tmpSum + visParticles.at(jparticle).particleMomentumForBoosting;
 		}
 	}
@@ -448,6 +455,32 @@ void Root::TRJigsaw::boostParticles(TVector3 boost, bool includeInvisible = true
 	} else {
 		boostParticles(boost,includeInvisible,startingParticle,endingParticle,generation,1);
 		boostParticles(boost,includeInvisible,startingParticle,endingParticle,generation,2);
+	}
+
+	return;
+}
+
+
+void Root::TRJigsaw::unboostParticles(bool includeInvisible = true, int startingParticle = 0, int endingParticle = -1, int generation = 0, int hemisphere = 0){
+
+	if(hemisphere){
+		if(endingParticle == -1) endingParticle = hemisphereConfig[hemisphere][generation].size();
+		for(int iparticle=startingParticle; iparticle<endingParticle; iparticle++){
+			if(hemisphereConfig[hemisphere][generation][iparticle]=="nu" && includeInvisible){
+				for( int jparticle = 0; jparticle < invParticles.size(); jparticle++){
+					if(invParticles.at(jparticle).hemisphere != hemisphere ) continue;
+					invParticles.at(jparticle).particleMomentumForBoosting = invParticles.at(jparticle).particleMomentum;
+				}
+			}
+			for( int jparticle = 0; jparticle < visParticles.size(); jparticle++){
+				if(visParticles.at(jparticle).particleType != hemisphereConfig[hemisphere][generation][iparticle] ) continue;
+				if(visParticles.at(jparticle).hemisphere != hemisphere ) continue;
+				visParticles.at(jparticle).particleMomentumForBoosting = visParticles.at(jparticle).particleMomentum;
+			}
+		}
+	} else {
+		unboostParticles(includeInvisible,startingParticle,endingParticle,generation,1);
+		unboostParticles(includeInvisible,startingParticle,endingParticle,generation,2);
 	}
 
 	return;

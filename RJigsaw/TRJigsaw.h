@@ -150,6 +150,7 @@ namespace Root {
 		// Boost the desired particles by -boost
 
 		void boostParticles(TVector3 boost, bool includeInvisible, int startingParticle, int endingParticle, int generation, int hemisphere);
+		void unboostParticles(bool includeInvisible, int startingParticle, int endingParticle, int generation, int hemisphere);
 
 		TLorentzVector findTruParticleMomentum(TString particleType, int hemisphere);
 
