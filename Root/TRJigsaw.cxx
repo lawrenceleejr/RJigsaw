@@ -282,8 +282,6 @@ void Root::TRJigsaw::guessInvParticles(){
 
 void Root::TRJigsaw::getObservables(){
 
-	std::cout << "in getObservables" << std::endl;
-
 	// Let's declare some stuff ahead of the loop
 
 	TVector3 tmpBoostVector;
@@ -343,7 +341,7 @@ void Root::TRJigsaw::getObservables(){
 
 				// Do the boosting for all relevant particles
 
-				// boostParticles(-tmpBoostVector, true, 0, -1, iGeneration, iHemisphere); 
+				boostParticles(-tmpBoostVector, true, 0, -1, iGeneration, iHemisphere); 
 
 				// and momentum sums
 
@@ -388,11 +386,7 @@ void Root::TRJigsaw::getObservables(){
 				// Gamma observable
 				observables[ TString::Format("gamma_%d_%d_%d",iHemisphere, iGeneration, hemiBalanceMode) ] = 
 				1./pow( (1.-leg1.BoostVector().Mag2())*(1.-leg2.BoostVector().Mag2()),1./4. );
-				
-				std::cout << leg1.BoostVector().Mag2() << std::endl;
-				std::cout << leg2.BoostVector().Mag2() << std::endl;
-				std::cout << 1./pow( (1.-leg1.BoostVector().Mag2())*(1.-leg2.BoostVector().Mag2()),1./4. ) << std::endl;
-
+			
 			}
 	}
 

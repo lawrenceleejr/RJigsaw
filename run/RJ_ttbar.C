@@ -85,7 +85,7 @@ int main(){
 	M = 175./1000.; //TeV units
 
 	//Number of toy events to throw
-	int N = 10000;
+	int N = 100000;
 
 
 	////////////////////////////////////////////////////////////
@@ -121,20 +121,51 @@ int main(){
 	RJTool->bookHist1D("M_0_0_1",100.,0.,1000.);
 	RJTool->bookHist1D("M_0_0_-1",100.,0.,1000.);
 
-	RJTool->bookHist2D("M_0_0_0","dPhi_0_0_0", 100. , 0. , 1000. , 100. , 0. , TMath::Pi()   ); //(x, y, xaxis, yaxis)
+	RJTool->bookHist1D("M_1_0_0",100.,0.,1000.);
+	RJTool->bookHist1D("M_1_0_1",100.,0.,1000.);
+	RJTool->bookHist1D("M_1_0_-1",100.,0.,1000.);
+	RJTool->bookHist1D("M_2_0_0",100.,0.,1000.);
+	RJTool->bookHist1D("M_2_0_1",100.,0.,1000.);
+	RJTool->bookHist1D("M_2_0_-1",100.,0.,1000.);
+
+	RJTool->bookHist1D("M_1_1_0",100.,0.,1000.);
+	RJTool->bookHist1D("M_1_1_1",100.,0.,1000.);
+	RJTool->bookHist1D("M_1_1_-1",100.,0.,1000.);
+	RJTool->bookHist1D("M_2_1_0",100.,0.,1000.);
+	RJTool->bookHist1D("M_2_1_1",100.,0.,1000.);
+	RJTool->bookHist1D("M_2_1_-1",100.,0.,1000.);
+
+
+	RJTool->bookHist2D("M_0_0_-1","M_0_0_0", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+	RJTool->bookHist2D("M_0_0_-1","M_0_0_1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+	RJTool->bookHist2D("M_0_0_0" ,"M_0_0_1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+
+	RJTool->bookHist2D("M_1_0_-1","M_1_0_0", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+	RJTool->bookHist2D("M_1_0_-1","M_1_0_1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+	RJTool->bookHist2D("M_1_0_0" ,"M_1_0_1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+	RJTool->bookHist2D("M_2_0_-1","M_2_0_0", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+	RJTool->bookHist2D("M_2_0_-1","M_2_0_1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+	RJTool->bookHist2D("M_2_0_0" ,"M_2_0_1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+
+
+	RJTool->bookHist2D("M_1_1_-1","M_1_1_0", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+	RJTool->bookHist2D("M_1_1_-1","M_1_1_1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+	RJTool->bookHist2D("M_1_1_0" ,"M_1_1_1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+	RJTool->bookHist2D("M_2_1_-1","M_2_1_0", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+	RJTool->bookHist2D("M_2_1_-1","M_2_1_1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+	RJTool->bookHist2D("M_2_1_0" ,"M_2_1_1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+
+	RJTool->bookHist2D("M_1_0_-1","M_2_0_-1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
 	RJTool->bookHist2D("M_1_0_0","M_2_0_0", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
-	RJTool->bookHist2D("M_1_0_0","M_1_0_1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
-	RJTool->bookHist2D("M_2_0_0","M_2_0_1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+	RJTool->bookHist2D("M_1_0_1","M_2_0_1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
 
-	RJTool->bookHist2D("M_1_1_0","M_2_1_0", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
-	RJTool->bookHist2D("M_1_1_0","M_1_1_1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
-	RJTool->bookHist2D("M_2_1_0","M_2_1_1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+	RJTool->bookHist2D("M_1_1_-1","M_2_1_-1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+	RJTool->bookHist2D("M_1_1_0" ,"M_2_1_0", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+	RJTool->bookHist2D("M_1_1_1" ,"M_2_1_1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
 
-	RJTool->bookHist2D("M_1_0_0","M_1_0_-1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
-	RJTool->bookHist2D("M_2_0_0","M_2_0_-1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
-
-	RJTool->bookHist2D("M_1_0_1","M_1_0_-1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
-	RJTool->bookHist2D("M_2_0_1","M_2_0_-1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+	RJTool->bookHist2D("M_1_0_-1","M_1_1_-1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+	RJTool->bookHist2D("M_1_0_0" ,"M_1_1_0", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
+	RJTool->bookHist2D("M_1_0_1" ,"M_1_1_1", 100. , 0. , 1000. , 100. , 0. , 1000.   ); 
 
 	// Replicating original code
 
@@ -148,11 +179,12 @@ int main(){
 	RJTool->bookHist2D("dPhi_0_0_0","dPhiVis_0_0_0", 50. , 0. , TMath::Pi()   , 50. , 0. , TMath::Pi()   ); 
 	RJTool->bookHist2D("dPhi_0_0_1","dPhiVis_0_0_1", 50. , 0. , TMath::Pi()   , 50. , 0. , TMath::Pi()   ); 
 
+	RJTool->bookHist2D("M_0_0_-1","dPhiVis_0_0_-1", 50. , 0. , 1000.  , 50. , 0. , TMath::Pi()   ); 
 	RJTool->bookHist2D("M_0_0_0","dPhiVis_0_0_0", 50. , 0. , 1000.  , 50. , 0. , TMath::Pi()   ); 
 	RJTool->bookHist2D("M_0_0_1","dPhiVis_0_0_1", 50. , 0. , 1000.  , 50. , 0. , TMath::Pi()   ); 
 
-	RJTool->bookHist2D("gamma_0_0_-1","gamma_0_0_0", 5000. , 0. , 2 , 5000. , 0. , 2 ); 
-	RJTool->bookHist2D("gamma_0_0_-1","gamma_0_0_1", 5000. , 0. , 2 , 5000. , 0. , 2 ); 
+	RJTool->bookHist2D("gamma_0_0_-1","gamma_0_0_0", 50. , 0. , 10. , 50. , 0. , 10. ); 
+	RJTool->bookHist2D("gamma_0_0_-1","gamma_0_0_1", 50. , 0. , 10. , 50. , 0. , 10. ); 
 
 
 
@@ -179,7 +211,9 @@ int main(){
 
 	for(int i = 0; i < N; i++){
 
-		cout << i << endl;
+		if(i%100==0){
+			cout << i << endl;
+		}
 
 		if(b_gamma){
 			gamma = h_gamma->GetRandom();
@@ -246,8 +280,8 @@ int main(){
 
 		// Give truth nus to the tool
 
-		RJTool->addVisParticle("nu",C_1_2[0],1);
-		RJTool->addVisParticle("nu",C_1_2[1],2);
+		RJTool->addTruParticle("nu",C_1_2[0],1);
+		RJTool->addTruParticle("nu",C_1_2[1],2);
 
 		// Let's construct a fake MET vector
 
