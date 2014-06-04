@@ -7,6 +7,7 @@
 #include <TStyle.h>
 #include <TColor.h>
 #include <TF1.h>
+#include <TFile.h>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -64,7 +65,11 @@ void GetLepTopHem(int iHem, double Mtop, double MW, double Mb, double Mlep, doub
 
 TCanvas* Plot_Me_2D(char *titlecan, TH2D* histo, char *titleX, char *titleY);
 
+
 void RJ_ttbar(){
+
+  TFile* file = new TFile("output.root","RECREATE");
+
   setstyle();
 	
   //give transverse momenta to CM system in lab frame?
@@ -83,7 +88,7 @@ void RJ_ttbar(){
   M = 175./1000.; //TeV units
 	
   //Number of toy events to throw
-  int N = 100000;
+  int N = 10000;
 	
   //setup histograms
   TH2D *hist_dphiTT_true_v_top = new TH2D("hist_dphiTT_true_v_top","hist_dphiTT_true_v_top",50, 0.0, TMath::Pi(), 50, 0.0,TMath::Pi());
@@ -1042,6 +1047,11 @@ void RJ_ttbar(){
     TCanvas *c138 = Plot_Me_2D("c138", hist_dphi_T1_W1_costhetaW2, "#Delta#phi_{T1,W1}^{true}", "cos #theta_{W2}^{true}");
     TCanvas *c139 = Plot_Me_2D("c139", hist_dphi_T1_W1_costhetaT1, "#Delta#phi_{T1,W1}^{true}", "cos #theta_{T1}^{true}");
     TCanvas *c140 = Plot_Me_2D("c140", hist_dphi_T1_W1_costhetaT2, "#Delta#phi_{T1,W1}^{true}", "cos #theta_{T2}^{true}");
+
+
+    file->Write();
+    file->Close();
+
 }
 
 void BoostToLabFrame(double gamma_eff){

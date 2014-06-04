@@ -376,8 +376,8 @@ void Root::TRJigsaw::getObservables(){
 				decayPlaneVector2 = leg2_1.Vect().Cross(leg2_2.Vect());
 
 				observables[ TString::Format("dPhiDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)  ]  = decayPlaneVector1.Angle(decayPlaneVector2);
-				observables[ TString::Format("codThetaDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)  ]  = leg1_1.Vect().Dot(decayPlaneVector2);
-				if( observables[ TString::Format("codThetaDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)  ] < 0.0 && 
+				observables[ TString::Format("cosThetaDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)  ]  = leg1_1.Vect().Dot(decayPlaneVector2);
+				if( observables[ TString::Format("cosThetaDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)  ] < 0.0 && 
 					observables[ TString::Format("dPhiDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)      ] > 0.0 ){
 					observables[ TString::Format("dPhiDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode) ] *= 1.0;
 					observables[ TString::Format("dPhiDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode) ] +=  TMath::Pi()*2. ; 
