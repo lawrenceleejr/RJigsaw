@@ -137,7 +137,7 @@ namespace Root {
 			TString particleType;
 			TLorentzVector particleMomentum;
 			TLorentzVector particleMomentumForBoosting;
-			int hemisphere = 0;
+			int hemisphere;
 		};
 
 	protected:
@@ -164,7 +164,7 @@ namespace Root {
 		std::map< TString, TH1D* > Hists1D;
 		std::map< TString, TH2D* > Hists2D;
 
-		int hemiBalanceMode = 0;
+		int hemiBalanceMode;
 
 		std::vector< std::vector<TString> > hemisphereConfig[3];
 
