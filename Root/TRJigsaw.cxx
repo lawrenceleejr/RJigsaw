@@ -65,6 +65,26 @@ void Root::TRJigsaw::initialize(std::string filename1, std::string filename2){
 
 	// Reads in filenameN and stores particle listings into vectors
 
+	std::cout << "###################################################" << std::endl;
+	std::cout << "###################################################" << std::endl;
+	std::cout << "##" << std::endl;
+	std::cout << "## TRJigsaw::initialize()" << std::endl;
+	std::cout << "##" << std::endl;
+	std::cout << "## Initializing with:" << std::endl;
+	std::cout << "## Hemisphere 1: " << filename1 << std::endl;
+	std::cout << "## Hemisphere 2: " << filename2 << std::endl;
+	std::cout << "###################################################" << std::endl;
+	std::cout << "###################################################" << std::endl;
+
+	std::cout <<  std::endl;
+	std::cout <<  std::endl;
+
+	std::cout << "###################################################" << std::endl;
+	std::cout << "##" << std::endl;
+	std::cout << "## Config below " << std::endl;
+	std::cout << "##" << std::endl;
+
+
 	hemisphereConfig[0].clear();
 	hemisphereConfig[1].clear();
 	hemisphereConfig[2].clear();
@@ -77,13 +97,13 @@ void Root::TRJigsaw::initialize(std::string filename1, std::string filename2){
 	{
 		getline(infile,STRING);
 		std::stringstream ss(STRING);
-		std::cout << STRING << std::endl;
+		//std::cout << STRING << std::endl;
 		std::istream_iterator<std::string> begin(ss);
 		std::istream_iterator<std::string> end;
 		std::vector<std::string> vstrings(begin,end);
 		std::copy(vstrings.begin(), vstrings.end(), std::ostream_iterator<std::string>(std::cout, " ") );
 		std::vector< TString > tStringVector( vstrings.begin(), vstrings.end() ) ;
-		hemisphereConfig[1].push_back(  tStringVector );
+		if( !tStringVector.empty()) hemisphereConfig[1].push_back(  tStringVector );
 		std::cout << std::endl;
 		std::cout << std::endl;
 	}
@@ -94,13 +114,13 @@ void Root::TRJigsaw::initialize(std::string filename1, std::string filename2){
 	{
 		getline(infile,STRING);
 		std::stringstream ss(STRING);		
-		std::cout << STRING << std::endl;
+		//std::cout << STRING << std::endl;
 		std::istream_iterator<std::string> begin(ss);
 		std::istream_iterator<std::string> end;
 		std::vector<std::string> vstrings(begin,end);
 		std::copy(vstrings.begin(), vstrings.end(), std::ostream_iterator<std::string>(std::cout, " ") );
 		std::vector< TString > tStringVector( vstrings.begin(), vstrings.end() ) ;
-		hemisphereConfig[2].push_back(  tStringVector );
+		if(!tStringVector.empty()) hemisphereConfig[2].push_back(  tStringVector );
 		std::cout << std::endl;
 		std::cout << std::endl;
 	}
@@ -111,6 +131,11 @@ void Root::TRJigsaw::initialize(std::string filename1, std::string filename2){
 	dummyVector.push_back("system");
 
 	hemisphereConfig[0].push_back(dummyVector);
+
+
+	std::cout << "##" << std::endl;
+	std::cout << "###################################################" << std::endl;
+
 
 	return;
 

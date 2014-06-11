@@ -85,7 +85,7 @@ int main(){
 	M = 175./1000.; //TeV units
 
 	//Number of toy events to throw
-	int N = 100000;
+	int N = 1000;
 
 
 	////////////////////////////////////////////////////////////
@@ -305,6 +305,8 @@ int main(){
 		// If you want access to the variables to do whatever with...
 
 		std::map< TString, double > observables = RJTool->getObservablesMap();
+
+		// std::cout << observables["M_0_0_0"] << std::endl;
 
 		// Try again with other Hemisphere mode
 
