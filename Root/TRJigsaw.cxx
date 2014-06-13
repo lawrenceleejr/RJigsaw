@@ -411,7 +411,12 @@ void Root::TRJigsaw::getObservables(){
 				// Gamma observable
 				observables[ TString::Format("gamma_%d_%d_%d",iHemisphere, iGeneration, hemiBalanceMode) ] = 
 				1./pow( (1.-leg1.BoostVector().Mag2())*(1.-leg2.BoostVector().Mag2()),1./4. );
-			
+
+				// Let's get the final mass scale
+				observables[ TString::Format("MDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode) ]  = (leg1).M();
+
+
+
 			}
 	}
 
