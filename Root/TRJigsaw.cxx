@@ -93,6 +93,7 @@ void Root::TRJigsaw::initialize(std::string filename1, std::string filename2){
 	std::ifstream infile;
 
 	infile.open(filename1.data());
+	assert(!infile.fail() );
 	while(!infile.eof())
 	{
 		getline(infile,STRING);
@@ -110,6 +111,7 @@ void Root::TRJigsaw::initialize(std::string filename1, std::string filename2){
 	infile.close();
 
 	infile.open(filename2.data());
+	assert(!infile.fail() );
 	while(!infile.eof())
 	{
 		getline(infile,STRING);
