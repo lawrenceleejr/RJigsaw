@@ -365,6 +365,8 @@ void Root::TRJigsaw::getObservables(){
 				// Calculate the boost of this whole system
 
 				tmpBoostVector = (leg1+leg2).BoostVector();
+				tmpBoostVector.SetX(0.0);
+				tmpBoostVector.SetY(0.0);
 
 				// Do the boosting for all relevant particles
 
@@ -381,7 +383,66 @@ void Root::TRJigsaw::getObservables(){
 				leg2_1.Boost(-tmpBoostVector);
 				leg2_2.Boost(-tmpBoostVector);
 
-				// Now everything is in the rest frame of the vertex!
+
+				TVector3 pT_CM = (leg1Vis+leg2Vis).Vect() + *METVector;
+				pT_CM.SetZ(0.0);
+
+				
+
+				TLorentzVector leg1leg2 = leg1Vis+leg2Vis;
+
+			    float SHATR = sqrt( 2.*(leg1leg2.E()*leg1leg2.E() - leg1leg2.Vect().Dot(pT_CM) + leg1leg2.E()*sqrt( leg1leg2.E()*leg1leg2.E() + pT_CM.Mag2() - 2.*leg1leg2.Vect().Dot(pT_CM) )));
+			    float Eleg1leg2 = leg1leg2.E();
+
+		        TVector3 vBeta_R = (1./sqrt(pT_CM.Mag2() + SHATR*SHATR))*pT_CM;
+	            float gamma_R = 1./sqrt(1.-vBeta_R.Mag2());
+
+
+				boostParticles(-vBeta_R, true, 0, -1, iGeneration, iHemisphere); 
+
+				// and momentum sums
+
+				leg1.Boost(-vBeta_R);
+				leg1Vis.Boost(-vBeta_R);
+				leg2.Boost(-vBeta_R);
+				leg2Vis.Boost(-vBeta_R);
+				leg1_1.Boost(-vBeta_R);
+				leg1_2.Boost(-vBeta_R);
+				leg2_1.Boost(-vBeta_R);
+				leg2_2.Boost(-vBeta_R);
+
+
+				float dphi_Beta_R = (leg1leg2.Vect()).DeltaPhi(vBeta_R);
+				float dphi_leg1_leg2 = leg1Vis.Vect().DeltaPhi(leg2Vis.Vect());
+
+			    TVector3 vBeta_Rp1 = (1./(leg1Vis.E()+leg2Vis.E()))*(leg1Vis.Vect() - leg2Vis.Vect());
+			    float gamma_Rp1 = 1./sqrt(1.-vBeta_Rp1.Mag2());
+
+				float dphi_Beta_Rp1_Beta_R = vBeta_Rp1.DeltaPhi(vBeta_R);
+
+				leg1Vis.Boost(-vBeta_Rp1);
+				leg2Vis.Boost(vBeta_Rp1);
+
+				float MDeltaR = 2.*leg1Vis.E();
+
+				float Eleg1 = leg1Vis.E();
+				float Eleg2 = leg2Vis.E();
+
+				float costhetaRp1 = fabs(leg1Vis.Vect().Dot(vBeta_Rp1)/(leg1Vis.Vect().Mag()*vBeta_Rp1.Mag()));
+
+
+				observables[ TString::Format("sHatR_%d_%d_%d", iHemisphere, iGeneration, hemiBalanceMode) ]  = SHATR;
+				observables[ TString::Format("E12_%d_%d_%d", iHemisphere, iGeneration, hemiBalanceMode) ]  = Eleg1leg2;
+				observables[ TString::Format("gamma_R_%d_%d_%d", iHemisphere, iGeneration, hemiBalanceMode) ]  = gamma_R;
+				observables[ TString::Format("dphi_Beta_R_%d_%d_%d", iHemisphere, iGeneration, hemiBalanceMode) ]  = dphi_Beta_R;
+				observables[ TString::Format("dphi_leg1_leg2_%d_%d_%d", iHemisphere, iGeneration, hemiBalanceMode) ]  = dphi_leg1_leg2;
+				observables[ TString::Format("gamma_Rp1_%d_%d_%d", iHemisphere, iGeneration, hemiBalanceMode) ]  = gamma_Rp1;
+				observables[ TString::Format("dphi_Beta_Rp1_Beta_R_%d_%d_%d", iHemisphere, iGeneration, hemiBalanceMode) ]  = dphi_Beta_Rp1_Beta_R;
+				observables[ TString::Format("MDeltaR_%d_%d_%d", iHemisphere, iGeneration, hemiBalanceMode) ]  = MDeltaR;
+				observables[ TString::Format("Eleg1_%d_%d_%d", iHemisphere, iGeneration, hemiBalanceMode) ]  = Eleg1;
+				observables[ TString::Format("Eleg2_%d_%d_%d", iHemisphere, iGeneration, hemiBalanceMode) ]  = Eleg2;
+				observables[ TString::Format("costhetaRp1_%d_%d_%d", iHemisphere, iGeneration, hemiBalanceMode) ]  = costhetaRp1;
+
 
 				////////////////////////////////////////////////////////////
 				// Let's calculate some observables in this rest frame
@@ -389,33 +450,33 @@ void Root::TRJigsaw::getObservables(){
 
 				// Angles
 
-				observables[ TString::Format("cosTheta_%d_%d_%d", iHemisphere, iGeneration, hemiBalanceMode) ]     = fabs( leg1.Vect().Unit().Dot( tmpBoostVector.Unit() ));
-				observables[ TString::Format("dPhi_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode) ]        = fabs( leg1.Vect().DeltaPhi( tmpBoostVector ));
-				observables[ TString::Format("dPhiVis_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)  ]    = fabs( (leg1Vis+leg2Vis).Vect().DeltaPhi( tmpBoostVector ));
+				// observables[ TString::Format("cosTheta_%d_%d_%d", iHemisphere, iGeneration, hemiBalanceMode) ]     = fabs( leg1.Vect().Unit().Dot( tmpBoostVector.Unit() ));
+				// observables[ TString::Format("dPhi_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode) ]        = fabs( leg1.Vect().DeltaPhi( tmpBoostVector ));
+				// observables[ TString::Format("dPhiVis_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)  ]    = fabs( (leg1Vis+leg2Vis).Vect().DeltaPhi( tmpBoostVector ));
 
-				// Scale
+				// // Scale
 
-				observables[ TString::Format("M_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode) ]  = (leg1+leg2).M();
+				// observables[ TString::Format("M_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode) ]  = (leg1+leg2).M();
 
-				// Acoplanarity-type angles
+				// // Acoplanarity-type angles
 
-				decayPlaneVector1 = leg1_1.Vect().Cross(leg1_2.Vect());
-				decayPlaneVector2 = leg2_1.Vect().Cross(leg2_2.Vect());
+				// decayPlaneVector1 = leg1_1.Vect().Cross(leg1_2.Vect());
+				// decayPlaneVector2 = leg2_1.Vect().Cross(leg2_2.Vect());
 
-				observables[ TString::Format("dPhiDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)  ]  = decayPlaneVector1.Angle(decayPlaneVector2);
-				observables[ TString::Format("cosThetaDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)  ]  = leg1_1.Vect().Dot(decayPlaneVector2);
-				if( observables[ TString::Format("cosThetaDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)  ] < 0.0 && 
-					observables[ TString::Format("dPhiDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)      ] > 0.0 ){
-					observables[ TString::Format("dPhiDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode) ] *= -1.0;
-					observables[ TString::Format("dPhiDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode) ] +=  TMath::Pi()*2. ; 
-				}
+				// observables[ TString::Format("dPhiDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)  ]  = decayPlaneVector1.Angle(decayPlaneVector2);
+				// observables[ TString::Format("cosThetaDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)  ]  = leg1_1.Vect().Dot(decayPlaneVector2);
+				// if( observables[ TString::Format("cosThetaDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)  ] < 0.0 && 
+				// 	observables[ TString::Format("dPhiDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode)      ] > 0.0 ){
+				// 	observables[ TString::Format("dPhiDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode) ] *= -1.0;
+				// 	observables[ TString::Format("dPhiDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode) ] +=  TMath::Pi()*2. ; 
+				// }
 
-				// Gamma observable
-				observables[ TString::Format("gamma_%d_%d_%d",iHemisphere, iGeneration, hemiBalanceMode) ] = 
-				1./pow( (1.-leg1.BoostVector().Mag2())*(1.-leg2.BoostVector().Mag2()),1./4. );
+				// // Gamma observable
+				// observables[ TString::Format("gamma_%d_%d_%d",iHemisphere, iGeneration, hemiBalanceMode) ] = 
+				// 1./pow( (1.-leg1.BoostVector().Mag2())*(1.-leg2.BoostVector().Mag2()),1./4. );
 
-				// Let's get the final mass scale
-				observables[ TString::Format("MDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode) ]  = (leg1).M();
+				// // Let's get the final mass scale
+				// observables[ TString::Format("MDecay_%d_%d_%d" , iHemisphere, iGeneration, hemiBalanceMode) ]  = (leg1).M();
 
 
 
