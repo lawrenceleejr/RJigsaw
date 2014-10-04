@@ -364,7 +364,7 @@ void Root::TRJigsaw::getObservables(){
 
 				// Calculate the boost of this whole system
 
-				tmpBoostVector = (leg1+leg2).BoostVector();
+				tmpBoostVector = (leg1Vis+leg2Vis).BoostVector();
 				tmpBoostVector.SetX(0.0);
 				tmpBoostVector.SetY(0.0);
 
