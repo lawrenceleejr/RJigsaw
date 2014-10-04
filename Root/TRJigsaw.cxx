@@ -212,7 +212,6 @@ void Root::TRJigsaw::guessInvParticles(){
 		//Now, we need to 'guess' the invariant mass of the weakly interacting system
 
 		double HM2min = std::min(H1.M2(), H2.M2() );
-		double HM2max = std::max(H1.M2(), H2.M2() );
 
 		double Minv2 = (H1+H2).M2() - 4.*HM2min;
 
@@ -327,7 +326,7 @@ void Root::TRJigsaw::getObservables(){
 
 	for( int iHemisphere = 0; iHemisphere < 3; iHemisphere++){
 
-			for( int iGeneration = 0; iGeneration < hemisphereConfig[iHemisphere].size(); iGeneration++ ){ // iGeneration is index in config file line
+			for( unsigned int iGeneration = 0; iGeneration < hemisphereConfig[iHemisphere].size(); iGeneration++ ){ // iGeneration is index in config file line
 
 				// Really can't boost the first vertex more than once
 
@@ -499,20 +498,20 @@ TLorentzVector Root::TRJigsaw::sumParticles(bool includeInvisible, int startingP
 
 	TLorentzVector tmpSum(0,0,0,0);
 
-	if( generation >= hemisphereConfig[hemisphere].size() ) return tmpSum;
+	if( generation >= int(hemisphereConfig[hemisphere].size())  ) return tmpSum;
 
-	if(endingParticle == -1) endingParticle = hemisphereConfig[hemisphere][generation].size();
+	if(endingParticle == -1) endingParticle = int(hemisphereConfig[hemisphere][generation].size());
 
-	for(int iparticle=startingParticle; iparticle<endingParticle; iparticle++){
+	for( int iparticle=startingParticle; iparticle<endingParticle; iparticle++){
 		if(hemisphereConfig[hemisphere][generation][iparticle]=="nu" && includeInvisible){
-			for( int jparticle = 0; jparticle < invParticles.size(); jparticle++){
+			for( unsigned int jparticle = 0; jparticle < invParticles.size(); jparticle++){
 				// //std::cout << jparticle << "/" << invParticles.size() << std::endl;
 				if(invParticles.at(jparticle).hemisphere != hemisphere ) continue; // IS THIS RIGHT??????????????????????
 				tmpSum = tmpSum + invParticles.at(jparticle).particleMomentumForBoosting;
 			}
 			continue;
 		}
-		for( int jparticle = 0; jparticle < visParticles.size(); jparticle++){
+		for( unsigned int jparticle = 0; jparticle < visParticles.size(); jparticle++){
 			// //std::cout << jparticle << "/" << visParticles.size() << std::endl;
 			if(visParticles.at(jparticle).particleType != hemisphereConfig[hemisphere][generation][iparticle] ) continue;
 			if(visParticles.at(jparticle).hemisphere != hemisphere ) continue;
@@ -528,15 +527,15 @@ void Root::TRJigsaw::boostParticles(TVector3 boost, bool includeInvisible = true
 
 	TLorentzVector tmpSum(0,0,0,0);
 	if(hemisphere){
-		if(endingParticle == -1) endingParticle = hemisphereConfig[hemisphere][generation].size();
+	  if(endingParticle == -1) endingParticle = int(hemisphereConfig[hemisphere][generation].size());
 		for(int iparticle=startingParticle; iparticle<endingParticle; iparticle++){
 			if(hemisphereConfig[hemisphere][generation][iparticle]=="nu" && includeInvisible){
-				for( int jparticle = 0; jparticle < invParticles.size(); jparticle++){
+				for( unsigned int jparticle = 0; jparticle < invParticles.size(); jparticle++){
 					if(invParticles.at(jparticle).hemisphere != hemisphere ) continue;
 					(invParticles.at(jparticle).particleMomentumForBoosting).Boost(boost);
 				}
 			}
-			for( int jparticle = 0; jparticle < visParticles.size(); jparticle++){
+			for( unsigned int jparticle = 0; jparticle < visParticles.size(); jparticle++){
 				if(visParticles.at(jparticle).particleType != hemisphereConfig[hemisphere][generation][iparticle] ) continue;
 				if(visParticles.at(jparticle).hemisphere != hemisphere ) continue;
 				(visParticles.at(jparticle).particleMomentumForBoosting).Boost(boost);
@@ -554,15 +553,15 @@ void Root::TRJigsaw::boostParticles(TVector3 boost, bool includeInvisible = true
 void Root::TRJigsaw::unboostParticles(bool includeInvisible = true, int startingParticle = 0, int endingParticle = -1, int generation = 0, int hemisphere = 0){
 
 	if(hemisphere){
-		if(endingParticle == -1) endingParticle = hemisphereConfig[hemisphere][generation].size();
-		for(int iparticle=startingParticle; iparticle<endingParticle; iparticle++){
+	  if(endingParticle == -1) endingParticle = int(hemisphereConfig[hemisphere][generation].size());
+		for( int iparticle=startingParticle; iparticle<endingParticle; iparticle++){
 			if(hemisphereConfig[hemisphere][generation][iparticle]=="nu" && includeInvisible){
-				for( int jparticle = 0; jparticle < invParticles.size(); jparticle++){
+				for( unsigned int jparticle = 0; jparticle < invParticles.size(); jparticle++){
 					if(invParticles.at(jparticle).hemisphere != hemisphere ) continue;
 					invParticles.at(jparticle).particleMomentumForBoosting = invParticles.at(jparticle).particleMomentum;
 				}
 			}
-			for( int jparticle = 0; jparticle < visParticles.size(); jparticle++){
+			for( unsigned int jparticle = 0; jparticle < visParticles.size(); jparticle++){
 				if(visParticles.at(jparticle).particleType != hemisphereConfig[hemisphere][generation][iparticle] ) continue;
 				if(visParticles.at(jparticle).hemisphere != hemisphere ) continue;
 				visParticles.at(jparticle).particleMomentumForBoosting = visParticles.at(jparticle).particleMomentum;
@@ -580,11 +579,13 @@ TLorentzVector Root::TRJigsaw::findTruParticleMomentum(TString particleType, int
 
 	// Tool to get momentum of a given truth particle
 
-	for( int jparticle = 0; jparticle < truParticles.size(); jparticle++){
+	for( unsigned int jparticle = 0; jparticle < truParticles.size(); jparticle++){
 			if(truParticles.at(jparticle).particleType != particleType ) continue;
 			if(truParticles.at(jparticle).hemisphere != hemisphere ) continue;
 			return truParticles.at(jparticle).particleMomentum;
 	}
+
+	return TLorentzVector(0.,0.,0.,0.);
 
 }
 
