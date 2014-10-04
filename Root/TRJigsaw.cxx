@@ -415,6 +415,8 @@ void Root::TRJigsaw::getObservables(){
 				float dphi_Beta_R = (leg1leg2.Vect()).DeltaPhi(vBeta_R);
 				float dphi_leg1_leg2 = leg1Vis.Vect().DeltaPhi(leg2Vis.Vect());
 
+				float costhetaR =  fabs(leg1leg2.Vect().Dot(vBeta_R)/(leg1leg2.Vect().Mag()*vBeta_R.Mag()));
+
 			    TVector3 vBeta_Rp1 = (1./(leg1Vis.E()+leg2Vis.E()))*(leg1Vis.Vect() - leg2Vis.Vect());
 			    float gamma_Rp1 = 1./sqrt(1.-vBeta_Rp1.Mag2());
 
@@ -442,6 +444,7 @@ void Root::TRJigsaw::getObservables(){
 				observables[ TString::Format("Eleg1_%d_%d_%d", iHemisphere, iGeneration, hemiBalanceMode) ]  = Eleg1;
 				observables[ TString::Format("Eleg2_%d_%d_%d", iHemisphere, iGeneration, hemiBalanceMode) ]  = Eleg2;
 				observables[ TString::Format("costhetaRp1_%d_%d_%d", iHemisphere, iGeneration, hemiBalanceMode) ]  = costhetaRp1;
+				observables[ TString::Format("costhetaR_%d_%d_%d", iHemisphere, iGeneration, hemiBalanceMode) ]  = costhetaR;
 
 
 				////////////////////////////////////////////////////////////
