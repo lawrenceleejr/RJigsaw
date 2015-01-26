@@ -368,16 +368,13 @@ std::pair<TLorentzVector,TLorentzVector> Root::TRJigsaw::calcHemispheres(){
 	  h2 = temp;
 	}
 
-	std::cout << "RJigsaw: hemispheres in calculator "<< h1.Pt() << " " << h2.Pt() << std::endl;
+	// std::cout << "RJigsaw: hemispheres in calculator "<< h1.Pt() << " " << h2.Pt() << std::endl;
 
 	return std::pair<TLorentzVector,TLorentzVector>(h1,h2);
 
 }
 
 void Root::TRJigsaw::getObservables(TLorentzVector h1, TLorentzVector h2){
-
-	std::cout << "RJigsaw: h1 h2 pt "<< h1.Pt() << " " << h2.Pt() << std::endl;
-	std::cout << "RJigsaw: MET "<< (*METVector).X() << " " << (*METVector).Y() << std::endl;
 
 	TVector3 vBETA_z = (1./(h1.E()+h2.E()))*(h1+h2).Vect();
 	vBETA_z.SetX(0.0);
@@ -392,8 +389,6 @@ void Root::TRJigsaw::getObservables(TLorentzVector h1, TLorentzVector h2){
 
 	float m_Minv2 = (h1+h2).M2() - 4.*h1.M()*h2.M();
 	float m_Einv = sqrt((*METVector).Mag2()+m_Minv2);
-
-	std::cout << "RJigsaw: Minv2 "<< m_Minv2  << std::endl;
 
 
 	//////////////////////
