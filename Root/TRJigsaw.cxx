@@ -308,6 +308,9 @@ void Root::TRJigsaw::guessInvParticles(){
 
 std::pair<TLorentzVector,TLorentzVector> Root::TRJigsaw::calcHemispheres(){
 
+	std::cout << "entering calcHemispheres" << std::endl;
+
+
 	// ATH_MSG_DEBUG("size of m_selectedInputJetContainer " << nJets );
 
 	/////////// Starting Hemisphere Reconstruction ////////////////////////
@@ -365,11 +368,16 @@ std::pair<TLorentzVector,TLorentzVector> Root::TRJigsaw::calcHemispheres(){
 	  h2 = temp;
 	}
 
+	std::cout << "RJigsaw: hemispheres in calculator "<< h1.Pt() << " " << h2.Pt() << std::endl;
+
 	return std::pair<TLorentzVector,TLorentzVector>(h1,h2);
 
 }
 
 void Root::TRJigsaw::getObservables(TLorentzVector h1, TLorentzVector h2){
+
+	std::cout << "RJigsaw: h1 h2 pt "<< h1.Pt() << " " << h2.Pt() << std::endl;
+	std::cout << "RJigsaw: MET "<< (*METVector).X() << " " << (*METVector).Y() << std::endl;
 
 	TVector3 vBETA_z = (1./(h1.E()+h2.E()))*(h1+h2).Vect();
 	vBETA_z.SetX(0.0);
@@ -384,6 +392,9 @@ void Root::TRJigsaw::getObservables(TLorentzVector h1, TLorentzVector h2){
 
 	float m_Minv2 = (h1+h2).M2() - 4.*h1.M()*h2.M();
 	float m_Einv = sqrt((*METVector).Mag2()+m_Minv2);
+
+	std::cout << "RJigsaw: Minv2 "<< m_Minv2  << std::endl;
+
 
 	//////////////////////
 	// definition of m_shatR
@@ -426,15 +437,15 @@ void Root::TRJigsaw::getObservables(TLorentzVector h1, TLorentzVector h2){
 	float m_mdelta_R = 2.*h1.E();
 	float m_costheta_Rp1 = fabs(h1.Vect().Dot(vBeta_Rp1)/(h1.Vect().Mag()*vBeta_Rp1.Mag()));
 
-	observables[ TString::Format("sHatR") ]  = m_shatR;
-	observables[ TString::Format("gammainv_R") ]  = m_gammainv_R;
-	observables[ TString::Format("dphi_Beta_R") ]  = m_dphi_Beta_R;
-	observables[ TString::Format("dphi_leg1_leg2") ]  = m_dphi_leg1_leg2;
-	observables[ TString::Format("costheta_R") ]  = m_costheta_R;
-	observables[ TString::Format("gammainv_Rp1") ]  = m_gammainv_Rp1;
-	observables[ TString::Format("dphi_Beta_Rp1_Beta_R") ]  = m_dphi_Beta_Rp1_Beta_R;
-	observables[ TString::Format("mdelta_R") ]  = m_mdelta_R;
-	observables[ TString::Format("costheta_Rp1") ]  = m_costheta_Rp1;
+	observables[ "sHatR" ]  = m_shatR;
+	observables[ "gammainv_R" ]  = m_gammainv_R;
+	observables[ "dphi_Beta_R" ]  = m_dphi_Beta_R;
+	observables[ "dphi_leg1_leg2" ]  = m_dphi_leg1_leg2;
+	observables[ "costheta_R" ]  = m_costheta_R;
+	observables[ "gammainv_Rp1" ]  = m_gammainv_Rp1;
+	observables[ "dphi_Beta_Rp1_Beta_R" ]  = m_dphi_Beta_Rp1_Beta_R;
+	observables[ "mdelta_R" ]  = m_mdelta_R;
+	observables[ "costheta_Rp1" ]  = m_costheta_Rp1;
 
 }
 
