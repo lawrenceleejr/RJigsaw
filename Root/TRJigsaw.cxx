@@ -306,7 +306,142 @@ void Root::TRJigsaw::guessInvParticles(){
 }
 
 
+std::pair<TLorentzVector,TLorentzVector> Root::TRJigsaw::calcHemispheres(){
+
+	// ATH_MSG_DEBUG("size of m_selectedInputJetContainer " << nJets );
+
+	/////////// Starting Hemisphere Reconstruction ////////////////////////
+	/////////// Adapted from Chris Rogan //////////////////////////////////
+
+	double M_min = -1.;
+	int j_count;
+
+	int itemp = 0;
+	int count = 0;
+
+	double M_temp=0;
+
+	TLorentzVector h1,h2;
+	TLorentzVector h1temp,h2temp;
+
+	// Brute force loop over 2^N-1 jet combinations //////////////////////
+	// Not great, we know. But it does the job for now... ////////////////
+
+	int N_comb = pow(2.,visParticles.size() );
+
+	for(int i = 1; i < N_comb-1; i++){
+
+		itemp = i;
+		j_count = N_comb/2.;
+		count = 0;
+		h1temp *= 0; h2temp *= 0;
+		while(j_count > 0){
+		    if(itemp/j_count == 1){
+		        h1temp += visParticles.at(count).particleMomentum;
+		    } else {
+		        h2temp += visParticles.at(count).particleMomentum;
+		    }
+		    itemp -= j_count*(itemp/j_count);
+		    j_count /= 2.;
+		    count++;
+		}
+
+		if(h1temp.M2()==0. || h2temp.M2()==0.) continue;
+
+		M_temp = h1temp.M2() + h2temp.M2();
+
+		// Trying to minimize combined hemisphere mass //////////
+
+		if(M_temp < M_min || M_min < 0){
+		    M_min = M_temp;
+		    h1 = h1temp;
+		    h2 = h2temp;
+		}
+	}
+
+	if(h2.Pt() > h1.Pt() ){
+	  TLorentzVector temp = h1;
+	  h1 = h2;
+	  h2 = temp;
+	}
+
+	return std::pair<TLorentzVector,TLorentzVector>(h1,h2);
+
+}
+
+void Root::TRJigsaw::getObservables(TLorentzVector h1, TLorentzVector h2){
+
+	TVector3 vBETA_z = (1./(h1.E()+h2.E()))*(h1+h2).Vect();
+	vBETA_z.SetX(0.0);
+	vBETA_z.SetY(0.0);
+
+	//transformation from lab frame to approximate rest frame along beam-axis
+	h1.Boost(-vBETA_z);
+	h2.Boost(-vBETA_z);
+
+	TVector3 pT_CM = (h1+h2).Vect() + *METVector;
+	pT_CM.SetZ(0.0); //should be redundant...
+
+	float m_Minv2 = (h1+h2).M2() - 4.*h1.M()*h2.M();
+	float m_Einv = sqrt((*METVector).Mag2()+m_Minv2);
+
+	//////////////////////
+	// definition of m_shatR
+	//////////////////////
+	float m_shatR = sqrt( ((h1+h2).E()+m_Einv)*((h1+h2).E()+m_Einv) - pT_CM.Mag2() );
+
+	TVector3 vBeta_R = (1./sqrt(pT_CM.Mag2() + m_shatR*m_shatR))*pT_CM;
+    float m_gammainv_R = sqrt(1.-vBeta_R.Mag2());
+
+	//transformation from lab frame to R frame
+	h1.Boost(-vBeta_R);
+	h2.Boost(-vBeta_R);
+
+	/////////////
+	//
+	// R-frame
+	//
+	/////////////
+
+
+	TLorentzVector h1h2 = h1+h2;
+
+	float m_dphi_Beta_R = (h1h2.Vect()).DeltaPhi(vBeta_R);
+	float m_dphi_leg1_leg2 = h1.Vect().DeltaPhi(h2.Vect());
+	float m_costheta_R =  fabs(h1h2.Vect().Dot(vBeta_R)/(h1h2.Vect().Mag()*vBeta_R.Mag()));
+
+	TVector3 vBeta_Rp1 = (1./(h1.E()+h2.E()))*(h1.Vect() - h2.Vect());
+
+	////////////////////////
+	// definition of m_gaminvR
+	////////////////////////
+
+	float m_gammainv_Rp1 = sqrt(1.-vBeta_Rp1.Mag2());
+	float m_dphi_Beta_Rp1_Beta_R = vBeta_Rp1.DeltaPhi(vBeta_R);
+
+
+	h1.Boost(-vBeta_Rp1);
+	h2.Boost(vBeta_Rp1);
+
+	float m_mdelta_R = 2.*h1.E();
+	float m_costheta_Rp1 = fabs(h1.Vect().Dot(vBeta_Rp1)/(h1.Vect().Mag()*vBeta_Rp1.Mag()));
+
+	observables[ TString::Format("sHatR") ]  = m_shatR;
+	observables[ TString::Format("gammainv_R") ]  = m_gammainv_R;
+	observables[ TString::Format("dphi_Beta_R") ]  = m_dphi_Beta_R;
+	observables[ TString::Format("dphi_leg1_leg2") ]  = m_dphi_leg1_leg2;
+	observables[ TString::Format("costheta_R") ]  = m_costheta_R;
+	observables[ TString::Format("gammainv_Rp1") ]  = m_gammainv_Rp1;
+	observables[ TString::Format("dphi_Beta_Rp1_Beta_R") ]  = m_dphi_Beta_Rp1_Beta_R;
+	observables[ TString::Format("mdelta_R") ]  = m_mdelta_R;
+	observables[ TString::Format("costheta_Rp1") ]  = m_costheta_Rp1;
+
+}
+
+
 void Root::TRJigsaw::getObservables(){
+
+	// Ok I have to clean this stuff up now
 
 	// Let's declare some stuff ahead of the loop
 
@@ -486,7 +621,6 @@ void Root::TRJigsaw::getObservables(){
 	}
 
 	unboostParticles(true, 0, -1, 0, 0); 
-
 	return;
 
 }

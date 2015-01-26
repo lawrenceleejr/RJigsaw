@@ -96,12 +96,19 @@ namespace Root {
 
 		void getObservables();
 
+
+		// This is a version that is just for hack's sake. Let's just get a 1-step decay done. Can simultaneously work on more complicated topologies later
+		void getObservables(TLorentzVector aVector, TLorentzVector bVector);
+
 		// mode is the same as the generation of decay, let's say. So for ttbar, 
 		// using the top symmetry will be mode 0 
 		// and using the W symmetry will be mode 1
 
 		void setHemisphereMode(int mode){ hemiBalanceMode = mode; return; };
 		int getHemisphereMode(){return hemiBalanceMode;}
+
+		std::pair<TLorentzVector,TLorentzVector> calcHemispheres();
+
 
 
 		/////////////////////////////////////////////
